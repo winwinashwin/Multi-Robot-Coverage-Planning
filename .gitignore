@@ -2,6 +2,9 @@ build/*
 devel/*
 install/*
 .catkin_workspace
+src/CMakeLists.txt
+cmake-build-*
 frames.pdf
 frames.gv
+
 .idea/*
