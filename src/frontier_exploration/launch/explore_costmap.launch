@@ -1,0 +1,6 @@
+<launch>
+    <node pkg="frontier_exploration" type="frontier_exploration_node" respawn="false" name="explore" output="screen">
+        <rosparam command="load" file="$(find frontier_exploration)/config/params.yaml"/>
+        <remap from="costmap" to="/map"/>
+    </node>
+</launch>

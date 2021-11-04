@@ -1,0 +1,27 @@
+<launch>
+    <arg name="robot_base_frame" default="base_footprint"/>
+    <arg name="odom_frame" default="odom"/>
+    <arg name="scan_frame" default="scan"/>
+    <arg name="move_forward_only" default="true"/>
+
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" clear_params="true">
+        <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS"/>
+        <rosparam file="$(find navigation)/config/exploration/costmap_common_params.yaml" command="load"
+                  ns="global_costmap"/>
+        <rosparam file="$(find navigation)/config/exploration/costmap_common_params.yaml" command="load"
+                  ns="local_costmap"/>
+        <rosparam file="$(find navigation)/config/exploration/local_costmap_params.yaml" command="load"/>
+        <rosparam file="$(find navigation)/config/exploration/global_costmap_params.yaml" command="load"/>
+        <rosparam file="$(find navigation)/config/exploration/move_base_params.yaml" command="load"/>
+        <rosparam file="$(find navigation)/config/exploration/dwa_local_planner_params.yaml" command="load"/>
+        <param name="DWAPlannerROS/min_vel_x" value="0.0" if="$(arg move_forward_only)"/>
+
+        <param name="global_costmap/robot_base_frame" value="$(arg robot_base_frame)"/>
+        <param name="global_costmap/obstacle_layer/scan/sensor_frame" value="$(arg scan_frame)"/>
+        <param name="local_costmap/robot_base_frame" value="$(arg robot_base_frame)"/>
+        <param name="local_costmap/global_frame" value="$(arg odom_frame)"/>
+        <param name="local_costmap/obstacle_layer/scan/sensor_frame" value="$(arg scan_frame)"/>
+
+    </node>
+</launch>
+

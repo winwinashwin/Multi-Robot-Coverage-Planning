@@ -1,0 +1,31 @@
+<launch>
+    <arg name="id" default="0"/>
+    <arg name="x_pos" default="0.0"/>
+    <arg name="y_pos" default="0.0"/>
+    <arg name="yaw" default="0.0"/>
+
+    <!--    Arguments henceforth aren't meant to be configuration arguments. DO NOT CHANGE THEM WHILE INCLUDING
+            THIS FILE IN OTHER LAUNCH FILES!!
+    -->
+
+    <arg name="frame" default="robot"/>
+
+    <!--    Unique ID of the robot -->
+    <arg name="uid" value="$(arg frame)_$(arg id)"/>
+
+    <group ns="$(arg uid)">
+        <param name="tf_prefix" value="$(arg uid)"/>
+
+        <!--    todo: Try to make `robot_description` param common for all robots -->
+        <param name="robot_description"
+               command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_waffle.urdf.xacro"/>
+
+        <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
+            <param name="publish_frequency" type="double" value="50.0"/>
+        </node>
+
+        <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"
+              args="-urdf -model $(arg uid) -x $(arg x_pos) -y $(arg y_pos) -z 0.0 -Y $(arg yaw) -param robot_description"/>
+    </group>
+
+</launch>

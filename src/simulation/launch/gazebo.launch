@@ -1,0 +1,12 @@
+<launch>
+    <arg name="map_id" default="1" doc="Map to load [1, 2, 3, 4]"/>
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find simulation)/worlds/map$(arg map_id).world"/>
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="headless" value="false"/>
+        <arg name="debug" value="false"/>
+    </include>
+</launch>

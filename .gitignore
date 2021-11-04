@@ -1,0 +1,7 @@
+build/*
+devel/*
+install/*
+.catkin_workspace
+frames.pdf
+frames.gv
+.idea/*

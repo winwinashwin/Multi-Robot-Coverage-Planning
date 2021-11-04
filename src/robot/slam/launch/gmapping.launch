@@ -1,0 +1,15 @@
+<launch>
+    <arg name="set_base_frame" default="base_footprint"/>
+    <arg name="set_odom_frame" default="odom"/>
+    <arg name="set_map_frame" default="map"/>
+
+    <node pkg="gmapping" type="slam_gmapping" name="slam" output="screen" clear_params="true">
+        <param name="base_frame" value="$(arg set_base_frame)"/>
+        <param name="odom_frame" value="$(arg set_odom_frame)"/>
+        <param name="map_frame" value="$(arg set_map_frame)"/>
+        <rosparam command="load" file="$(find slam)/config/gmapping_params.yaml"/>
+
+        <remap from="scan" to="scan"/>
+        <remap from="map" to="map"/>
+    </node>
+</launch>

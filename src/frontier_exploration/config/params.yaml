@@ -1,0 +1,24 @@
+robot_base_frame: base_footprint
+transform_tolerance: 0.5
+
+# Frequency of frontier-search-and-pursuit loop
+planner_frequency: 0.33
+
+# Failing to make progress within this timeframe (in seconds) blacklists
+# the current frontier
+progress_timeout: 10.0
+
+# Bias frontier selection for pursuit based on distance from robot.
+# Higher the value, higher the preference for closer frontiers
+potential_scale: 3.0
+
+# Bias frontier selection for pursuit based on frontier size.
+# Higher the value, higher the preference for larger frontiers
+gain_scale: 1.0
+
+# Consider a frontier worthy of pursuit only if
+# number_of_points_in_frontier * map_resolution > minimum_frontier_size
+minimum_frontier_size: 0.5
+
+# Publish RViz markers to visualise frontiers
+visualize: true

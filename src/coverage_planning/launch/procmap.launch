@@ -1,0 +1,7 @@
+<launch>
+    <node pkg="coverage_planning" type="procmap.py" name="procmap" clear_params="true" output="screen">
+        <param name="map" value="$(find coverage_planning)/maps/map.yaml"/>
+        <param name="cardinality_gain" value="3.3"/>
+        <param name="time_gain" value="1"/>
+    </node>
+</launch>
