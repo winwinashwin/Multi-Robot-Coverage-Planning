@@ -49,7 +49,12 @@
     <!-- Use doc_depend for packages you need only for building documentation: -->
     <!--   <doc_depend>doxygen</doc_depend> -->
     <buildtool_depend>catkin</buildtool_depend>
+    <depend>roscpp</depend>
+    <depend>nav_msgs</depend>
+    <depend>std_srvs</depend>
+    <build_depend>gazebo</build_depend>
     <test_depend>roslaunch</test_depend>
+    <test_depend>roslint</test_depend>
     <exec_depend>gazebo_ros</exec_depend>
     <exec_depend>robot_state_publisher</exec_depend>
     <exec_depend>xacro</exec_depend>

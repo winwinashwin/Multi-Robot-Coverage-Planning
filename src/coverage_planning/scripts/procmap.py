@@ -13,6 +13,7 @@ config = {
     "map": rospy.get_param("~map"),
     "cardinality_gain": rospy.get_param("~cardinality_gain"),
     "time_gain": rospy.get_param("~time_gain"),
+    "visualize": rospy.get_param("~visualize"),
 }
 
 # read map metadata
@@ -31,12 +32,12 @@ contours, _ = cv2.findContours(gray, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 navigable = max(contours, key=lambda c: cv2.contourArea(c))
 area = cv2.contourArea(navigable)
 
-# Uncomment to visualise
-# (x, y, w, h) = cv2.boundingRect(navigable)
-# cv2.rectangle(gray, (x, y), (x+w, y+h), 255, 1)
-# cv2.imshow('image', gray)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
+if config['visualize']:
+    (x, y, w, h) = cv2.boundingRect(navigable)
+    cv2.rectangle(gray, (x, y), (x+w, y+h), 255, 1)
+    cv2.imshow('image', gray)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 # Penalty for number of robots
 a = config["cardinality_gain"]
