@@ -32,10 +32,10 @@ contours, _ = cv2.findContours(gray, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 navigable = max(contours, key=lambda c: cv2.contourArea(c))
 area = cv2.contourArea(navigable)
 
-if config['visualize']:
+if config["visualize"]:
     (x, y, w, h) = cv2.boundingRect(navigable)
-    cv2.rectangle(gray, (x, y), (x+w, y+h), 255, 1)
-    cv2.imshow('image', gray)
+    cv2.rectangle(gray, (x, y), (x + w, y + h), 255, 1)
+    cv2.imshow("image", gray)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
