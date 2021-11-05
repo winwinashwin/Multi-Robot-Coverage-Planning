@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="rviz" default="false"/>
+
+    <include file="$(find full_coverage_path_planner)/test/full_coverage_path_planner/test_full_coverage_path_planner.launch" >
+        <arg name="map" value="$(find full_coverage_path_planner)/maps/basement.yaml"/>
+        <arg name="coverage_area_offset" value="3 -0.25 0 1.57 0 0"/>
+        <arg name="coverage_area_size_x" value="3.0"/>
+        <arg name="coverage_area_size_y" value="5.0"/>
+        <arg name="target_x_vel" value="0.5"/>
+        <arg name="target_yaw_vel" value="0.4"/>
+        <arg name="robot_radius" value="0.5"/>
+        <arg name="tool_radius" value="0.5"/>
+        <arg name="rviz" value="$(eval rviz)"/>
+    </include>
+
+    <test test-name="rostest_full_coverage_path_planner_node" pkg="full_coverage_path_planner" type="test_full_coverage_path_planner_system.py" time-limit="300.0" />
+
+</launch>

@@ -104,7 +104,7 @@ roslint_python()
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-        #  INCLUDE_DIRS include
+          INCLUDE_DIRS include
         #  LIBRARIES coverage_planning
           CATKIN_DEPENDS roscpp rospy roslint
         #  DEPENDS system_lib
@@ -117,7 +117,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-        # include
+         include
         ${catkin_INCLUDE_DIRS}
 )
 
@@ -134,7 +134,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/coverage_planning_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/main.cpp src/boustrophedon_stc.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -161,8 +161,8 @@ include_directories(
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
-        scripts/coverage_progress.py
-        scripts/procmap.py
+        scripts/coverage_progress_visualizer.py
+        scripts/optimizer.py
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
         )
 

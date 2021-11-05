@@ -164,7 +164,8 @@ class CoverageProgressNode(object):
 
         self.grid.data = (
             self.grid_data.tolist()
-        )  # Convert to list to avoid serialization errors
+        )
+        # Convert to list to avoid serialization errors
         self.grid_pub.publish(self.grid)
 
     def reset(self, _srv_request):

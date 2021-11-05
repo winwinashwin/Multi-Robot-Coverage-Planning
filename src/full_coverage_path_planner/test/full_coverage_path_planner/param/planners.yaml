@@ -1,0 +1,3 @@
+planners:
+  - name: 'BoustrophedonSTC'
+    type: 'full_coverage_path_planner/BoustrophedonSTC'

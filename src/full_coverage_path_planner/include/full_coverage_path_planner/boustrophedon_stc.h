@@ -1,0 +1,79 @@
+//
+// Copyright [2020] Nobleo Technology"  [legal/copyright]
+//
+#include <list>
+#include <string>
+#include <vector>
+
+#include <ros/ros.h>
+#include <pluginlib/class_list_macros.h>
+#include <costmap_2d/costmap_2d_ros.h>
+#include <costmap_2d/costmap_2d.h>
+#include <nav_core/base_global_planner.h>
+#include <nav_msgs/Path.h>
+#include <nav_msgs/GetMap.h>
+#include <geometry_msgs/PoseStamped.h>
+#include <angles/angles.h>
+#include <base_local_planner/world_model.h>
+#include <base_local_planner/costmap_model.h>
+#include <fstream>
+
+using std::string;
+
+//?????????? What's this file for again? define the classes?
+
+#ifndef FULL_COVERAGE_PATH_PLANNER_BOUSTROPHEDON_STC_H
+#define FULL_COVERAGE_PATH_PLANNER_BOUSTROPHEDON_STC_H
+
+#include "full_coverage_path_planner/full_coverage_path_planner.h"
+namespace full_coverage_path_planner
+{
+class BoustrophedonSTC : public nav_core::BaseGlobalPlanner, public full_coverage_path_planner::FullCoveragePathPlanner
+{
+public:
+  /**
+   * Find a path that does the boustrophedon pattern starting from init until a dead end is reached in the grid
+   * @param grid 2D grid of bools. true == occupied/blocked/obstacle
+   * @param init start position
+   * @param visited all the nodes visited by the boustrophedon pattern
+   * @return list of nodes that form the boustrophedon pattern
+   */
+  static std::list<gridNode_t> boustrophedon(std::vector<std::vector<bool> > const &grid, std::list<gridNode_t> &init,
+                                      std::vector<std::vector<bool> > &visited);
+
+// ????????? Why is init a list?
+  /**
+   * Perform Boustrophedon-STC (Spanning Tree Coverage) coverage path planning.
+   * In essence, the robot moves forward until an obstacle or visited node is met, then turns right or left (making a boustrophedon pattern)
+   * When stuck in the middle of the boustrophedon, use A* to get out again and start a new boustrophedon, until a* can't find a path to uncovered cells
+   * @param grid
+   * @param init
+   * @return
+   */
+  static std::list<Point_t> boustrophedon_stc(std::vector<std::vector<bool> > const &grid,
+                                        Point_t &init,
+                                        int &multiple_pass_counter,
+                                        int &visited_counter);
+
+private:
+  /**
+   * @brief Given a goal pose in the world, compute a plan
+   * @param start The start pose
+   * @param goal The goal pose
+   * @param plan The plan... filled by the planner
+   * @return True if a valid plan was found, false otherwise
+   */
+   // ?????????? How does this work again?
+  bool makePlan(const geometry_msgs::PoseStamped &start, const geometry_msgs::PoseStamped &goal,
+                std::vector<geometry_msgs::PoseStamped> &plan);
+
+  /**
+   * @brief  Initialization function for the FullCoveragePathPlanner object
+   * @param  name The name of this planner
+   * @param  costmap A pointer to the ROS wrapper of the costmap to use for planning
+   */
+  void initialize(std::string name, costmap_2d::Costmap2DROS* costmap_ros);
+};
+
+}  // namespace full_coverage_path_planner
+#endif  // FULL_COVERAGE_PATH_PLANNER_BOUSTROPHEDON_STC_H

@@ -1,4 +1,0 @@
-<launch>
-    <arg name="map_file" default="$(find coverage_planning)/maps/bcd/map.yaml"/>
-    <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
-</launch>
