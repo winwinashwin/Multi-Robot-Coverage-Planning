@@ -6,7 +6,9 @@ import roslaunch
 import rospy
 from std_msgs.msg import UInt8
 from typing import cast
-from geometry_msgs.msg import PoseArray, Pose
+from geometry_msgs.msg import Pose
+from nav_msgs.msg import Path
+
 
 uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
 roslaunch.configure_logging(uuid)
@@ -23,7 +25,7 @@ robot_namespace = rospy.get_param('~robot_namespace', 'robot')
 
 for robot_id in range(n_agents):
     path_topic = f'{robot_namespace}_{robot_id}/waypoints'
-    start = cast(PoseArray, rospy.wait_for_message(path_topic, PoseArray)).poses[0]  # type: Pose
+    start = cast(Path, rospy.wait_for_message(path_topic, Path)).poses[0].pose  # type: Pose
 
     # todo(ashwin): orient robot to path. priority: low
     cli_args = [pkg, src,
@@ -38,3 +40,7 @@ for robot_id in range(n_agents):
 parent = roslaunch.parent.ROSLaunchParent(uuid, launch_files)
 parent.start()
 parent.spin()
+
+
+
+

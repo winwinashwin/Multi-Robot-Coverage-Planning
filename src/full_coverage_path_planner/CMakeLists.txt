@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
         costmap_2d
         nav_core
         geometry_msgs
+        rviz_visual_tools
         pluginlib
         roscpp
         roslint
@@ -27,6 +28,7 @@ catkin_package(
         LIBRARIES ${PROJECT_NAME}
         CATKIN_DEPENDS
         base_local_planner
+        rviz_visual_tools
         tf2
         costmap_2d
         nav_core
@@ -75,6 +77,10 @@ catkin_install_python(
         nodes/optimizer.py
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+
+install(DIRECTORY config launch maps rviz
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+        )
 
 if (CATKIN_ENABLE_TESTING)
     catkin_add_gtest(test_common test/src/test_common.cpp test/src/util.cpp src/common.cpp)

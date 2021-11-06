@@ -2,7 +2,7 @@
     <node pkg="full_coverage_path_planner" type="optimizer.py" name="optimizer" clear_params="true" output="screen">
         <param name="from_map_file" value="false"/>
 <!--        <param name="map_file" value="$(arg map_file)"/>-->
-        <param name="cardinality_gain" value="80"/>
+        <param name="cardinality_gain" value="5"/>
         <param name="time_gain" value="1"/>
     </node>
 </launch>

@@ -7,7 +7,6 @@ from pathlib import Path
 import yaml
 from std_msgs.msg import UInt8
 from nav_msgs.msg import OccupancyGrid
-from typing import cast
 
 
 class BaseOptimizer(object):

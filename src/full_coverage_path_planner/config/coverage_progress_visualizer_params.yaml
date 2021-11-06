@@ -1,5 +1,5 @@
-map_frame: map
-coverage_frame: robot_0/base_footprint
+#map_frame: coverage_map
+#coverage_frame: robot_0/base_footprint
 
 # Rate at which progress tracker should be run
 rate: 5.0  # 5 Hz
@@ -15,6 +15,6 @@ grid:
 coverage:
   # NOTE: To compensate for discretization, radius will be incremented further by 2*resolution
   # internally. Specify the radius accordingly.
-  radius: 0.07
+  radius: 0.10
   # How effective cleaning in each timestep is
   effectivity: 0.75
