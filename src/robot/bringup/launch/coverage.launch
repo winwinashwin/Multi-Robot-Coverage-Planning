@@ -24,42 +24,46 @@
                 Hence the frame id is manually set to `tf_prefix`/base_footprint using a simple python script.
                 This corrected IMU messages are the ones that are passed to the EKF node for state estimation.
         -->
+
         <node pkg="filters" type="imu_frame_id_correction.py" name="imu_frame_id_correction" output="screen"
               clear_params="true">
             <remap from="imu_in" to="imu"/>
             <remap from="imu_out" to="imu/frame_id_corrected"/>
         </node>
 
-        <!--    SLAM -->
+        <!--    Localization -->
         <group>
-            <include file="$(find slam)/launch/gmapping.launch">
-                <arg name="set_base_frame" value="$(arg uid)/base_footprint"/>
-                <arg name="set_odom_frame" value="$(arg uid)/odom"/>
-                <arg name="set_map_frame" value="/$(arg uid)/map"/>
+            <include file="$(find navigation)/launch/amcl.launch">
+                <arg name="odom_frame" value="$(arg uid)/odom"/>
+                <arg name="base_frame" value="$(arg uid)/base_footprint"/>
+                <arg name="initial_pose_x" value="$(arg x_pos)"/>
+                <arg name="initial_pose_y" value="$(arg y_pos)"/>
+                <arg name="initial_pose_a" value="$(arg yaw)"/>
             </include>
 
-            <node pkg="tf2_ros" type="static_transform_publisher" name="world_to_$(arg uid)_tf_broadcaster"
-                  args="0 0 0 0 0 0 /map /$(arg uid)/map"/>
+            <!--            <node pkg="tf2_ros" type="static_transform_publisher" name="world_to_$(arg uid)_tf_broadcaster"-->
+            <!--                  args="0 0 0 0 0 0 /map /$(arg uid)/map"/>-->
 
-            <group ns="map_merge">
-                <param name="init_pose_x" value="$(arg x_pos)"/>
-                <param name="init_pose_y" value="$(arg y_pos)"/>
-                <param name="init_pose_z" value="0.0"/>
-                <!--    Don't place value of arg `yaw` here, for some reason this seems to mess up
-                map merging -->
-                <param name="init_pose_yaw" value="0.0"/>
-            </group>
+            <!--            <group ns="map_merge">-->
+            <!--                <param name="init_pose_x" value="$(arg x_pos)"/>-->
+            <!--                <param name="init_pose_y" value="$(arg y_pos)"/>-->
+            <!--                <param name="init_pose_z" value="0.0"/>-->
+            <!--                &lt;!&ndash;    Don't place value of arg `yaw` here, for some reason this seems to mess up-->
+            <!--                map merging &ndash;&gt;-->
+            <!--                <param name="init_pose_yaw" value="0.0"/>-->
+            <!--            </group>-->
         </group>
 
         <!--    Move Base -->
-        <include file="$(find navigation)/launch/move_base_exploration.launch">
+        <include file="$(find navigation)/launch/move_base_coverage.launch">
             <arg name="robot_base_frame" value="$(arg uid)/base_footprint"/>
             <arg name="odom_frame" value="$(arg uid)/odom"/>
             <arg name="scan_frame" value="$(arg uid)/base_scan"/>
         </include>
 
-        <!--    Frontier Exploration -->
-        <include file="$(find frontier_exploration)/launch/explore_costmap.launch"/>
+        <include file="$(find follow_waypoints)/launch/follow_waypoints.launch">
+        </include>
+
     </group>
 
 </launch>

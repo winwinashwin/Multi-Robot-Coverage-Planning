@@ -50,6 +50,7 @@
     <!--   <doc_depend>doxygen</doc_depend> -->
     <buildtool_depend>catkin</buildtool_depend>
     <exec_depend>move_base</exec_depend>
+    <exec_depend>amcl</exec_depend>
     <test_depend>roslaunch</test_depend>
 
     <!-- The export tag contains other, unspecified, tags -->

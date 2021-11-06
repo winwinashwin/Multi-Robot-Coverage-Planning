@@ -1,129 +1,129 @@
-//
-// Created by ashwin on 05/11/21.
-//
-
-#include <ros/ros.h>
-#include <nav_msgs/OccupancyGrid.h>
 #include "full_coverage_path_planner/boustrophedon_stc.h"
-#include <opencv2/imgproc.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/opencv.hpp>
+
+#include <algorithm>
+#include <geometry_msgs/PoseArray.h>
 #include <list>
-#include <rviz_visual_tools/rviz_visual_tools.h>
+#include <nav_msgs/OccupancyGrid.h>
+#include <ros/ros.h>
+#include <std_msgs/UInt8.h>
+#include <string>
+#include <tf2/LinearMath/Quaternion.h>
+#include <vector>
 
-/**
- * Draw a nested vector of bools into an openCV image
- * @param grid
- * @return 2D 8-bit single-channel image
- */
-cv::Mat drawMap(std::vector<std::vector<bool> > const& grid)
+using PoseStamped = geometry_msgs::PoseStamped;
+using PoseArray = geometry_msgs::PoseArray;
+
+static double euDist2D(const PoseStamped& p1, const PoseStamped& p2)
 {
-    int y_size = static_cast<int>(grid.size());
-    int x_size = static_cast<int>(grid[0].size());
-
-    cv::Mat mapImg = cv::Mat::zeros(y_size, x_size, CV_8U);  // CV_8U 8bit unsigned int 1 channel
-    for (int k = 0; k < y_size; k++)
-    {
-        for (int l = 0; l < x_size; l++)
-        {
-            if (grid[k][l])
-            {
-                cv::rectangle(mapImg, {l, k}, {l, k}, 255);  // NOLINT
-            }
-        }
-    }
-    return mapImg;
+    return sqrt(pow(p1.pose.position.x - p2.pose.position.x, 2) + pow(p1.pose.position.y - p2.pose.position.y, 2));
 }
 
-/**
- * Draw path on a copy of the map
- * This is done twice: one to serve as input for calcDifference and another is returned for visualisation purposes
- * @param mapImg original map with just obstacles
- * @param pathImg Image that will feed into calcDifference
- * @param start Where does the path start?
- * @param path the actual path to be drawn
- * @return 2D RGB image for visualisation purposes
- */
-cv::Mat drawPath(const cv::Mat &mapImg,
-                 const cv::Mat &pathImg,
-                 const Point_t &start,
-                 std::list<Point_t> &path)
+static PoseStamped parametricInterp1(const PoseStamped& p1, const PoseStamped& p2, double alpha)
 {
-    cv::Mat pathViz = cv::Mat::zeros(mapImg.cols, mapImg.rows, CV_8UC3);
-    std::vector<cv::Mat> channels;
-    channels.push_back(mapImg.clone());
-    channels.push_back(mapImg.clone());
-    channels.push_back(mapImg.clone());
-    cv::merge(channels, pathViz);
-
-    int step = 0;
-    for (auto it = path.begin(); it != path.end(); ++it)
-    {
-//      std::cout << "Path at (" << it->x << ", " << it->y << ")" << std::endl;
-        cv::rectangle(pathImg, {it->x, it->y}, {it->x, it->y}, 255);  // NOLINT
-
-        // Color the path in lighter and lighter color towards the end
-        step++;
-        int value = ((step * 200) / static_cast<int>(path.size())) + 50;
-        cv::Scalar color(value, 128, 128);
-        cv::rectangle(pathViz, {it->x, it->y}, {it->x, it->y}, color);  // NOLINT
-    }
-
-    // Draw the start and end in green and red, resp.
-    cv::Scalar green(0, 255, 0);
-    cv::Scalar red(0, 0, 255);
-    cv::rectangle(pathViz,
-                  {start.x, start.y},
-                  {start.x, start.y},
-                  green);
-    cv::rectangle(pathViz,
-                  {path.back().x, path.back().y},
-                  {path.back().x, path.back().y},
-                  red);
-    return pathViz;
+    PoseStamped p;
+    p.header.frame_id = p1.header.frame_id;
+    p.pose.orientation = p1.pose.orientation;
+    p.pose.position.x = p1.pose.position.x + alpha * (p2.pose.orientation.x - p1.pose.orientation.x);
+    p.pose.position.y = p1.pose.position.y + alpha * (p2.pose.orientation.y - p1.pose.orientation.y);
+    return p;
 }
 
-
-int main(int argc, char **argv) {
+int main(int argc, char** argv)
+{
     ros::init(argc, argv, "test");
-    auto occ = ros::topic::waitForMessage<nav_msgs::OccupancyGrid>("map", ros::Duration(30));
+    ros::NodeHandle nh;
 
-    std::vector<std::vector<bool>> grid;
+    std::string start_pose, robotNamespace;
+    float robotRadius;
+
+    // Load Parameters
+    ros::param::get("~start_pose", start_pose);
+    ros::param::get("~robot_radius", robotRadius);
+    ros::param::get("~robot_namespace", robotNamespace);
+
+    auto occ = ros::topic::waitForMessage<nav_msgs::OccupancyGrid>("map");
+
+    std::vector<std::vector<bool>> grid;  // Binary matrix for path planning
     full_coverage_path_planner::BoustrophedonSTC planner;
-    Point_t scaled;
-    geometry_msgs::PoseStamped pose;
-    pose.pose.position.x = 2;
-    pose.header.frame_id = "map";
-    pose.pose.orientation.w = 1;
-    float r = 0.17;
-    planner.parseGrid(*occ, grid, r, r, pose, scaled);
+    Point_t scaled;    // This will hold the index of the start location in binary matrix
+    PoseStamped pose;  // This is the point from which path planning starts
+    {
+        std::stringstream ss(start_pose);
+        ss >> pose.pose.position.x >> pose.pose.position.y >> pose.pose.position.z;
+        double roll, pitch, yaw;
+        ss >> roll >> pitch >> yaw;
+        tf2::Quaternion q;
+        q.setRPY(roll, pitch, yaw);
+        pose.header.frame_id = "map";
+        pose.pose.orientation.x = q.x();
+        pose.pose.orientation.y = q.y();
+        pose.pose.orientation.z = q.z();
+        pose.pose.orientation.w = q.w();
+    }
+    // Convert occupancy grid to binary matrix
+    planner.parseGrid(*occ, grid, robotRadius, robotRadius, pose, scaled);
 
+    // Boustrophedon path planning
     int multiple_pass_counter, visited_counter;
-    std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(grid,
-                                                                                              scaled,
-                                                                                              multiple_pass_counter,
-                                                                                              visited_counter);
-    std::vector<geometry_msgs::PoseStamped> plan;
+    std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(
+        grid, scaled, multiple_pass_counter, visited_counter);
+
+    // path now has the indices of corner points in the path, we now convert that to real world coordinates
+    std::vector<PoseStamped> plan;
     planner.parsePointlist2Plan(pose, path, plan);
 
-    rviz_visual_tools::RvizVisualToolsPtr visual_tools_;
-    visual_tools_.reset(new rviz_visual_tools::RvizVisualTools("map","/rviz_visual_markers"));
-    std::vector<geometry_msgs::Pose> planNew;
-    planNew.reserve(plan.size());
-    std::for_each(plan.begin(), plan.end(), [&planNew](geometry_msgs::PoseStamped &it) {planNew.push_back(it.pose);});
-    visual_tools_->publishPath(planNew);
-//    std::cout << plan.size() << std::endl;
-//    std::cout << grid.size()*grid[0].size() << std::endl;
-    while (1) {
-        visual_tools_->trigger();
-        ros::spinOnce();
+    // Inorder to divide the path among agents, we need more points in between the corner points of the path.
+    // We just perform a linear parametric up-sampling
+    std::vector<PoseStamped> upSampled;
+
+    ROS_INFO("Path computed. Up-sampling...");
+    for (size_t i = 0; i < plan.size() - 1; ++i)
+    {
+        double mul = euDist2D(plan[i], plan[i + 1]) / floor(euDist2D(plan[i], plan[i + 1]) / robotRadius);
+        double a = 0;
+        while (a < 1)
+        {
+            upSampled.push_back(parametricInterp1(plan[i], plan[i + 1], a));
+            a += mul;
+        }
+    }
+    ROS_INFO("Up-sampling complete");
+    ROS_INFO("Waiting for number of agents");
+
+    // Prepare publishers
+    size_t nAgents = ros::topic::waitForMessage<std_msgs::UInt8>("number_of_agents")->data;
+    std::vector<ros::Publisher> waypointPublishers;
+    waypointPublishers.reserve(nAgents);
+    for (auto i = 0; i < nAgents; ++i)
+    {
+        std::stringstream ss;
+        ss << robotNamespace << "_" << i << "/waypoints";
+        waypointPublishers.push_back(nh.advertise<PoseArray>(ss.str(), 100, true));
     }
 
-//    cv::Mat mapImg = drawMap(grid);
-//    std::cout << grid.size() << std::endl;
-//    cv::Mat pathImg = mapImg.clone();
-//    cv::Mat pathViz = drawPath(mapImg, pathImg, scaled, path);
-//    cv::imwrite("/tmp/testMap.png", pathViz);
+    // Now divide the path approximately equally for each agent
+    std::vector<PoseArray> agentPaths(nAgents);
 
+    size_t length = upSampled.size() / nAgents;
+    size_t leftover = upSampled.size() % nAgents;
+    size_t begin = 0, end = 0;
+
+    ROS_INFO("Publishing paths");
+    for (size_t i = 0; i < std::min(nAgents, upSampled.size()); ++i)
+    {
+        end += leftover > 0 ? (length + !!(leftover--)) : length;
+
+        agentPaths[i].header.frame_id = "map";
+        agentPaths[i].header.stamp = ros::Time::now();
+        agentPaths[i].poses.reserve(end - begin);
+
+        for (size_t j = begin; j < end; ++j)
+        {
+            agentPaths[i].poses.push_back(upSampled[j].pose);
+        }
+        waypointPublishers[i].publish(agentPaths[i]);
+        begin = end;
+    }
+    ros::spin();
     return EXIT_SUCCESS;
 }

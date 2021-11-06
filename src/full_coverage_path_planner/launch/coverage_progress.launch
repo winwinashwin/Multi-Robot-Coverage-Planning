@@ -1,0 +1,8 @@
+<launch>
+    <node pkg="full_coverage_path_planner" type="coverage_progress_visualizer.py" name="coverage_progress"
+          clear_params="true" output="screen">
+        <rosparam command="load"
+                  file="$(find full_coverage_path_planner)/config/coverage_progress_visualizer_params.yaml"/>
+        <remap from="reset" to="coverage_progress/reset"/>
+    </node>
+</launch>

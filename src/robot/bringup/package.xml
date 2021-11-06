@@ -53,6 +53,7 @@
     <exec_depend>slam</exec_depend>
     <exec_depend>navigation</exec_depend>
     <exec_depend>frontier_exploration</exec_depend>
+    <exec_depend>follow_waypoints</exec_depend>
     <exec_depend>tf2_ros</exec_depend>
 
     <test_depend>roslaunch</test_depend>

@@ -5,6 +5,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# No more annoying gazebo warnings
+if(NOT DEFINED CMAKE_SUPPRESS_DEVELOPER_WARNINGS)
+    set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS 1 CACHE INTERNAL "No dev warnings")
+endif()
+
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
@@ -107,12 +112,14 @@ link_directories(${GAZEBO_LIBRARY_DIRS})
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-          INCLUDE_DIRS include
-          LIBRARIES gazebo_2Dmap_plugin
-          CATKIN_DEPENDS roscpp nav_msgs std_srvs
-          DEPENDS gazebo
+        INCLUDE_DIRS include
+        LIBRARIES gazebo_2Dmap_plugin
+        CATKIN_DEPENDS roscpp nav_msgs std_srvs
+        DEPENDS GAZEBO
 )
 roslint_cpp()
+roslint_python()
+
 ###########
 ## Build ##
 ###########
@@ -163,10 +170,10 @@ install(DIRECTORY launch models worlds
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# catkin_install_python(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+catkin_install_python(PROGRAMS
+        scripts/multi_robot_spawner.py
+        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+        )
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html

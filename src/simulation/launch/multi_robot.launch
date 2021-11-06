@@ -1,6 +1,9 @@
 <launch>
+    <arg name="map" default="simple"/>
+
+    <!--    Gazebo world-->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <arg name="world_name" value="$(find simulation)/worlds/simple.world"/>
+        <arg name="world_name" value="$(find simulation)/worlds/$(arg map).world"/>
         <arg name="paused" value="true"/>
         <arg name="use_sim_time" value="true"/>
         <arg name="gui" value="true"/>
@@ -8,17 +11,12 @@
         <arg name="debug" value="false"/>
     </include>
 
-    <include file="$(find simulation)/launch/spawn.launch">
-        <arg name="id" value="0"/>
-        <arg name="x_pos" value="-2.0"/>
-        <arg name="y_pos" value="2.0"/>
-        <arg name="yaw" value="0.0"/>
-    </include>
+    <!--    Waits for number of agents and waypoints for each agent, then spawns each agent at start position of
+    assigned path
+    -->
+    <node pkg="simulation" type="multi_robot_spawner.py" name="multi_robot_spawner" clear_params="true" required="true"
+          output="screen">
+        <param name="robot_namespace" value="robot"/>
+    </node>
 
-<!--    <include file="$(find simulation)/launch/spawn.launch">-->
-<!--        <arg name="id" value="1"/>-->
-<!--        <arg name="x_pos" value="0.0"/>-->
-<!--        <arg name="y_pos" value="2.0"/>-->
-<!--        <arg name="yaw" value="1.57"/>-->
-<!--    </include>-->
 </launch>

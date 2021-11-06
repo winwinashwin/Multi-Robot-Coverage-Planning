@@ -10,47 +10,37 @@
  * By putting the path nodes in a set, we are left with only the unique elements
  *  and then we can count how big that set is (i.e. the cardinality of the set of path nodes)
  */
-#include <list>
-#include <set>
-#include <vector>
-
-#include <time.h>
-#include <stdlib.h>
-
+#include <full_coverage_path_planner/boustrophedon_stc.h>
+#include <full_coverage_path_planner/common.h>
+#include <full_coverage_path_planner/util.h>
 #include <gtest/gtest.h>
-#include <opencv2/imgproc.hpp>
+#include <list>
 #include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
 #include <opencv2/opencv.hpp>
 #include <ros/ros.h>
+#include <set>
+#include <stdlib.h>
+#include <time.h>
+#include <vector>
 
-#include <full_coverage_path_planner/common.h>
-#include <full_coverage_path_planner/boustrophedon_stc.h>
-#include <full_coverage_path_planner/util.h>
+cv::Mat drawMap(std::vector<std::vector<bool>> const& grid);
 
-cv::Mat drawMap(std::vector<std::vector<bool> > const& grid);
-
-cv::Mat drawPath(const cv::Mat &mapImg,
-                 const cv::Mat &pathImg,
-                 const Point_t &start,
-                 std::list<Point_t> &path);
+cv::Mat drawPath(const cv::Mat& mapImg, const cv::Mat& pathImg, const Point_t& start, std::list<Point_t>& path);
 
 /*
  * On a map with nothing on it, boustrophedon_stc should cover all the nodes of the map
  */
 TEST(TestBoustrophedonStc, testFillEmptyMap)
 {
-  std::vector<std::vector<bool> > grid = makeTestGrid(4, 4, false);
+    std::vector<std::vector<bool>> grid = makeTestGrid(4, 4, false);
 
-  Point_t start = {0, 0};
-  int multiple_pass_counter, visited_counter;
-  std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(grid,
-                                                                              start,
-                                                                              multiple_pass_counter,
-                                                                              visited_counter);
+    Point_t start = {0, 0};
+    int multiple_pass_counter, visited_counter;
+    std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(
+        grid, start, multiple_pass_counter, visited_counter);
 
-
-
-  ASSERT_EQ(4 * 4, path.size());  // All nodes of the 4x4 map are covered
+    ASSERT_EQ(4 * 4, path.size());  // All nodes of the 4x4 map are covered
 }
 
 /*
@@ -58,30 +48,29 @@ TEST(TestBoustrophedonStc, testFillEmptyMap)
  */
 TEST(TestBoustrophedonStc, testFillMapWithOneObstacle)
 {
-  /*
-   * [s 0 0 0]
-   * [0 0 0 0]
-   * [0 0 1 0]
-   * [0 0 0 0]
-   */
-  std::vector<std::vector<bool> > grid = makeTestGrid(4, 4, false);
-  grid[2][2] = 1;
+    /*
+     * [s 0 0 0]
+     * [0 0 0 0]
+     * [0 0 1 0]
+     * [0 0 0 0]
+     */
+    std::vector<std::vector<bool>> grid = makeTestGrid(4, 4, false);
+    grid[2][2] = 1;
 
-  Point_t start = {0, 0};
-  int multiple_pass_counter, visited_counter;
-  std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(grid,
-                                                                              start,
-                                                                              multiple_pass_counter,
-                                                                              visited_counter);
+    Point_t start = {0, 0};
+    int multiple_pass_counter, visited_counter;
+    std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(
+        grid, start, multiple_pass_counter, visited_counter);
 
-                                                                              for (auto &p : path) {
-                                                                                std::cout << p.x << "," << p.y << '\n';
-                                                                              }
-  // By Adding the nodes of the path to the set, we only retain the unique elements
-  std::set<Point_t, CompareByPosition> pathSet(path.begin(), path.end());
+    for (auto& p : path)
+    {
+        std::cout << p.x << "," << p.y << '\n';
+    }
+    // By Adding the nodes of the path to the set, we only retain the unique elements
+    std::set<Point_t, CompareByPosition> pathSet(path.begin(), path.end());
 
-  // Because the area is 4*4 but with 1 obstacle, coverage all reachable nodes should over 4*4 - 1 = 15 nodes
-  ASSERT_EQ((4 * 4) - 1, pathSet.size());
+    // Because the area is 4*4 but with 1 obstacle, coverage all reachable nodes should over 4*4 - 1 = 15 nodes
+    ASSERT_EQ((4 * 4) - 1, pathSet.size());
 }
 
 /*
@@ -89,28 +78,26 @@ TEST(TestBoustrophedonStc, testFillMapWithOneObstacle)
  */
 TEST(TestBoustrophedonStc, testFillMapWith2Obstacles)
 {
-  /*
-   * [s 0 0 0]
-   * [0 0 0 0]
-   * [0 0 1 0]
-   * [0 0 0 1]
-   */
-  std::vector<std::vector<bool> > grid = makeTestGrid(4, 4, false);
-  grid[2][2] = 1;
-  grid[3][3] = 1;
+    /*
+     * [s 0 0 0]
+     * [0 0 0 0]
+     * [0 0 1 0]
+     * [0 0 0 1]
+     */
+    std::vector<std::vector<bool>> grid = makeTestGrid(4, 4, false);
+    grid[2][2] = 1;
+    grid[3][3] = 1;
 
-  Point_t start = {0, 0};
-  int multiple_pass_counter, visited_counter;
-  std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(grid,
-                                                                              start,
-                                                                              multiple_pass_counter,
-                                                                              visited_counter);
+    Point_t start = {0, 0};
+    int multiple_pass_counter, visited_counter;
+    std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(
+        grid, start, multiple_pass_counter, visited_counter);
 
-  // By Adding the nodes of the path to the set, we only retain the unique elements
-  std::set<Point_t, CompareByPosition> pathSet(path.begin(), path.end());
+    // By Adding the nodes of the path to the set, we only retain the unique elements
+    std::set<Point_t, CompareByPosition> pathSet(path.begin(), path.end());
 
-  // Because the area is 4*4 but with 1 obstacle, coverage all reachable nodes should over 4*4 - 2 = 14 nodes
-  ASSERT_EQ((4 * 4) - 2, pathSet.size());
+    // Because the area is 4*4 but with 1 obstacle, coverage all reachable nodes should over 4*4 - 2 = 14 nodes
+    ASSERT_EQ((4 * 4) - 2, pathSet.size());
 }
 
 /*
@@ -118,30 +105,28 @@ TEST(TestBoustrophedonStc, testFillMapWith2Obstacles)
  */
 TEST(TestBoustrophedonStc, testFillMapWithHalfBlocked)
 {
-  /*
-   * [s 0 1 0]
-   * [0 0 1 0]
-   * [0 0 1 0]
-   * [0 0 1 0]
-   */
-  std::vector<std::vector<bool> > grid = makeTestGrid(4, 4, false);
-  grid[0][2] = 1;
-  grid[1][2] = 1;
-  grid[2][2] = 1;
-  grid[3][2] = 1;
+    /*
+     * [s 0 1 0]
+     * [0 0 1 0]
+     * [0 0 1 0]
+     * [0 0 1 0]
+     */
+    std::vector<std::vector<bool>> grid = makeTestGrid(4, 4, false);
+    grid[0][2] = 1;
+    grid[1][2] = 1;
+    grid[2][2] = 1;
+    grid[3][2] = 1;
 
-  Point_t start = {0, 0};
-  int multiple_pass_counter, visited_counter;
-  std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(grid,
-                                                                              start,
-                                                                              multiple_pass_counter,
-                                                                              visited_counter);
+    Point_t start = {0, 0};
+    int multiple_pass_counter, visited_counter;
+    std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(
+        grid, start, multiple_pass_counter, visited_counter);
 
-  // By Adding the nodes of the path to the set, we only retain the unique elements
-  std::set<Point_t, CompareByPosition> pathSet(path.begin(), path.end());
+    // By Adding the nodes of the path to the set, we only retain the unique elements
+    std::set<Point_t, CompareByPosition> pathSet(path.begin(), path.end());
 
-  // Because the area is 4*4 but can only visit half the map, half the 4x4 area should be covered
-  ASSERT_EQ((4 * 4) / 2, pathSet.size());
+    // Because the area is 4*4 but can only visit half the map, half the 4x4 area should be covered
+    ASSERT_EQ((4 * 4) / 2, pathSet.size());
 }
 
 /*
@@ -150,29 +135,27 @@ TEST(TestBoustrophedonStc, testFillMapWithHalfBlocked)
  */
 TEST(TestBoustrophedonStc, testFillMapWithWall)
 {
-  /*
-   * [s 0 1 0]
-   * [0 0 1 0]
-   * [0 0 1 0]
-   * [0 0 0 0]
-   */
-  std::vector<std::vector<bool> > grid = makeTestGrid(4, 4, false);
-  grid[0][2] = 1;
-  grid[1][2] = 1;
-  grid[2][2] = 1;
+    /*
+     * [s 0 1 0]
+     * [0 0 1 0]
+     * [0 0 1 0]
+     * [0 0 0 0]
+     */
+    std::vector<std::vector<bool>> grid = makeTestGrid(4, 4, false);
+    grid[0][2] = 1;
+    grid[1][2] = 1;
+    grid[2][2] = 1;
 
-  Point_t start = {0, 0};
-  int multiple_pass_counter, visited_counter;
-  std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(grid,
-                                                                              start,
-                                                                              multiple_pass_counter,
-                                                                              visited_counter);
+    Point_t start = {0, 0};
+    int multiple_pass_counter, visited_counter;
+    std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(
+        grid, start, multiple_pass_counter, visited_counter);
 
-  // By Adding the nodes of the path to the set, we only retain the unique elements
-  std::set<Point_t, CompareByPosition> pathSet(path.begin(), path.end());
+    // By Adding the nodes of the path to the set, we only retain the unique elements
+    std::set<Point_t, CompareByPosition> pathSet(path.begin(), path.end());
 
-  // Because the area is 4*4 there is a 3-length wall
-  ASSERT_EQ((4 * 4) - 3, pathSet.size());
+    // Because the area is 4*4 there is a 3-length wall
+    ASSERT_EQ((4 * 4) - 3, pathSet.size());
 }
 
 /*
@@ -180,34 +163,32 @@ TEST(TestBoustrophedonStc, testFillMapWithWall)
  */
 TEST(TestBoustrophedonStc, testDeadEnd1)
 {
-  /*
-   * [0 0 1 0]
-   * [0 1 0 0]
-   * [0 s 0 0]
-   * [0 0 0 0]
-   */
-  std::vector<std::vector<bool> > grid = makeTestGrid(4, 4, false);
-  grid[0][2] = 1;
-  grid[1][1] = 1;
+    /*
+     * [0 0 1 0]
+     * [0 1 0 0]
+     * [0 s 0 0]
+     * [0 0 0 0]
+     */
+    std::vector<std::vector<bool>> grid = makeTestGrid(4, 4, false);
+    grid[0][2] = 1;
+    grid[1][1] = 1;
 
-  cv::Mat mapImg = drawMap(grid);
+    cv::Mat mapImg = drawMap(grid);
 
-  Point_t start = {1, 2};
-  int multiple_pass_counter, visited_counter;
-  std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(grid,
-                                                                              start,
-                                                                              multiple_pass_counter,
-                                                                              visited_counter);
+    Point_t start = {1, 2};
+    int multiple_pass_counter, visited_counter;
+    std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(
+        grid, start, multiple_pass_counter, visited_counter);
 
-  cv::Mat pathImg = mapImg.clone();
-  cv::Mat pathViz = drawPath(mapImg, pathImg, start, path);
-  cv::imwrite("/tmp/testDeadEnd1.png", pathViz);
+    cv::Mat pathImg = mapImg.clone();
+    cv::Mat pathViz = drawPath(mapImg, pathImg, start, path);
+    cv::imwrite("/tmp/testDeadEnd1.png", pathViz);
 
-  // By Adding the nodes of the path to the set, we only retain the unique elements
-  std::set<Point_t, CompareByPosition> pathSet(path.begin(), path.end());
+    // By Adding the nodes of the path to the set, we only retain the unique elements
+    std::set<Point_t, CompareByPosition> pathSet(path.begin(), path.end());
 
-  // Because the area is 4*4 and there are2 obstacle cells
-  ASSERT_EQ((4 * 4) - 2, pathSet.size());
+    // Because the area is 4*4 and there are2 obstacle cells
+    ASSERT_EQ((4 * 4) - 2, pathSet.size());
 }
 
 /*
@@ -218,40 +199,38 @@ TEST(TestBoustrophedonStc, testDeadEnd1)
  */
 TEST(TestBoustrophedonStc, testDeadEnd1WithTopRow)
 {
-  /*
-   * [1 1 1 1]
-   * [0 0 1 0]
-   * [0 1 0 0]
-   * [0 s 0 0]
-   * [0 0 0 0]
-   */
-  std::vector<std::vector<bool> > grid = makeTestGrid(4, 5, false);
-  grid[0][0] = 1;
-  grid[0][1] = 1;
-  grid[0][2] = 1;
-  grid[0][3] = 1;
+    /*
+     * [1 1 1 1]
+     * [0 0 1 0]
+     * [0 1 0 0]
+     * [0 s 0 0]
+     * [0 0 0 0]
+     */
+    std::vector<std::vector<bool>> grid = makeTestGrid(4, 5, false);
+    grid[0][0] = 1;
+    grid[0][1] = 1;
+    grid[0][2] = 1;
+    grid[0][3] = 1;
 
-  grid[1][2] = 1;
-  grid[2][1] = 1;
+    grid[1][2] = 1;
+    grid[2][1] = 1;
 
-  cv::Mat mapImg = drawMap(grid);
+    cv::Mat mapImg = drawMap(grid);
 
-  Point_t start = {1, 3};
-  int multiple_pass_counter, visited_counter;
-  std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(grid,
-                                                                              start,
-                                                                              multiple_pass_counter,
-                                                                              visited_counter);
+    Point_t start = {1, 3};
+    int multiple_pass_counter, visited_counter;
+    std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(
+        grid, start, multiple_pass_counter, visited_counter);
 
-  cv::Mat pathImg = mapImg.clone();
-  cv::Mat pathViz = drawPath(mapImg, pathImg, start, path);
-  cv::imwrite("/tmp/testDeadEnd1WithTopRow.png", pathViz);
+    cv::Mat pathImg = mapImg.clone();
+    cv::Mat pathViz = drawPath(mapImg, pathImg, start, path);
+    cv::imwrite("/tmp/testDeadEnd1WithTopRow.png", pathViz);
 
-  // By Adding the nodes of the path to the set, we only retain the unique elements
-  std::set<Point_t, CompareByPosition> pathSet(path.begin(), path.end());
+    // By Adding the nodes of the path to the set, we only retain the unique elements
+    std::set<Point_t, CompareByPosition> pathSet(path.begin(), path.end());
 
-  // Because the area is 4*5 and there are 6 cells blocked in total
-  ASSERT_EQ((4 * 5) - 6, pathSet.size());
+    // Because the area is 4*5 and there are 6 cells blocked in total
+    ASSERT_EQ((4 * 5) - 6, pathSet.size());
 }
 
 /*
@@ -259,34 +238,32 @@ TEST(TestBoustrophedonStc, testDeadEnd1WithTopRow)
  */
 TEST(TestBoustrophedonStc, testDeadEnd2)
 {
-  /*
-   * [1 0 0 0]
-   * [0 1 0 0]
-   * [0 s 0 0]
-   * [0 0 0 0]
-   */
-  std::vector<std::vector<bool> > grid = makeTestGrid(4, 4, false);
-  grid[0][0] = 1;
-  grid[1][1] = 1;
+    /*
+     * [1 0 0 0]
+     * [0 1 0 0]
+     * [0 s 0 0]
+     * [0 0 0 0]
+     */
+    std::vector<std::vector<bool>> grid = makeTestGrid(4, 4, false);
+    grid[0][0] = 1;
+    grid[1][1] = 1;
 
-  cv::Mat mapImg = drawMap(grid);
+    cv::Mat mapImg = drawMap(grid);
 
-  Point_t start = {3, 0};
-  int multiple_pass_counter, visited_counter;
-  std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(grid,
-                                                                              start,
-                                                                              multiple_pass_counter,
-                                                                              visited_counter);
+    Point_t start = {3, 0};
+    int multiple_pass_counter, visited_counter;
+    std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(
+        grid, start, multiple_pass_counter, visited_counter);
 
-  cv::Mat pathImg = mapImg.clone();
-  cv::Mat pathViz = drawPath(mapImg, pathImg, start, path);
-  cv::imwrite("/tmp/testDeadEnd2.png", pathViz);
+    cv::Mat pathImg = mapImg.clone();
+    cv::Mat pathViz = drawPath(mapImg, pathImg, start, path);
+    cv::imwrite("/tmp/testDeadEnd2.png", pathViz);
 
-  // By Adding the nodes of the path to the set, we only retain the unique elements
-  std::set<Point_t, CompareByPosition> pathSet(path.begin(), path.end());
+    // By Adding the nodes of the path to the set, we only retain the unique elements
+    std::set<Point_t, CompareByPosition> pathSet(path.begin(), path.end());
 
-  // Because the area is 4*4 and there are2 obstacle cells
-  ASSERT_EQ((4 * 4) - 2, pathSet.size());
+    // Because the area is 4*4 and there are2 obstacle cells
+    ASSERT_EQ((4 * 4) - 2, pathSet.size());
 }
 
 /*
@@ -294,40 +271,38 @@ TEST(TestBoustrophedonStc, testDeadEnd2)
  */
 TEST(TestBoustrophedonStc, testDeadEnd3)
 {
-  /*
-   * [0 0 0 0 0 0 1 0 0]
-   * [1 0 1 0 1 1 0 0 0]
-   * [0 0 0 0 1 2 0 0 0]
-   * [0 0 0 0 0 0 0 0 0]
-   * [0 0 0 0 0 0 0 0 0]
-   * [0 0 0 0 0 0 0 0 0]
-   */
-  std::vector<std::vector<bool> > grid = makeTestGrid(9, 6, false);
-  grid[0][6] = 1;
-  grid[1][0] = 1;
-  grid[1][2] = 1;
-  grid[1][4] = 1;
-  grid[1][5] = 1;
-  grid[2][4] = 1;
+    /*
+     * [0 0 0 0 0 0 1 0 0]
+     * [1 0 1 0 1 1 0 0 0]
+     * [0 0 0 0 1 2 0 0 0]
+     * [0 0 0 0 0 0 0 0 0]
+     * [0 0 0 0 0 0 0 0 0]
+     * [0 0 0 0 0 0 0 0 0]
+     */
+    std::vector<std::vector<bool>> grid = makeTestGrid(9, 6, false);
+    grid[0][6] = 1;
+    grid[1][0] = 1;
+    grid[1][2] = 1;
+    grid[1][4] = 1;
+    grid[1][5] = 1;
+    grid[2][4] = 1;
 
-  cv::Mat mapImg = drawMap(grid);
+    cv::Mat mapImg = drawMap(grid);
 
-  Point_t start = {5, 2};
-  int multiple_pass_counter, visited_counter;
-  std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(grid,
-                                                                              start,
-                                                                              multiple_pass_counter,
-                                                                              visited_counter);
+    Point_t start = {5, 2};
+    int multiple_pass_counter, visited_counter;
+    std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(
+        grid, start, multiple_pass_counter, visited_counter);
 
-  cv::Mat pathImg = mapImg.clone();
-  cv::Mat pathViz = drawPath(mapImg, pathImg, start, path);
-  cv::imwrite("/tmp/testDeadEnd3.png", pathViz);
+    cv::Mat pathImg = mapImg.clone();
+    cv::Mat pathViz = drawPath(mapImg, pathImg, start, path);
+    cv::imwrite("/tmp/testDeadEnd3.png", pathViz);
 
-  // By Adding the nodes of the path to the set, we only retain the unique elements
-  std::set<Point_t, CompareByPosition> pathSet(path.begin(), path.end());
+    // By Adding the nodes of the path to the set, we only retain the unique elements
+    std::set<Point_t, CompareByPosition> pathSet(path.begin(), path.end());
 
-  // Because the area is 4*4 and there are2 obstacle cells
-  ASSERT_EQ((6 * 9) - 6, pathSet.size());
+    // Because the area is 4*4 and there are2 obstacle cells
+    ASSERT_EQ((6 * 9) - 6, pathSet.size());
 }
 
 /*
@@ -335,49 +310,47 @@ TEST(TestBoustrophedonStc, testDeadEnd3)
  */
 TEST(TestBoustrophedonStc, testDeadEnd3WithTopRow)
 {
-  /*
-   * [1 1 1 1 1 1 1 1 1]
-   * [0 0 0 0 0 0 1 0 0]
-   * [1 0 1 0 1 1 0 0 0]
-   * [0 0 0 0 1 2 0 0 0]
-   * [0 0 0 0 0 0 0 0 0]
-   * [0 0 0 0 0 0 0 0 0]
-   * [0 0 0 0 0 0 0 0 0]
-   */
-  std::vector<std::vector<bool> > grid = makeTestGrid(9, 7, false);
-  grid[0][0] = 1;
-  grid[0][1] = 1;
-  grid[0][2] = 1;
-  grid[0][3] = 1;
-  grid[0][4] = 1;
-  grid[0][5] = 1;
-  grid[0][6] = 1;
+    /*
+     * [1 1 1 1 1 1 1 1 1]
+     * [0 0 0 0 0 0 1 0 0]
+     * [1 0 1 0 1 1 0 0 0]
+     * [0 0 0 0 1 2 0 0 0]
+     * [0 0 0 0 0 0 0 0 0]
+     * [0 0 0 0 0 0 0 0 0]
+     * [0 0 0 0 0 0 0 0 0]
+     */
+    std::vector<std::vector<bool>> grid = makeTestGrid(9, 7, false);
+    grid[0][0] = 1;
+    grid[0][1] = 1;
+    grid[0][2] = 1;
+    grid[0][3] = 1;
+    grid[0][4] = 1;
+    grid[0][5] = 1;
+    grid[0][6] = 1;
 
-  grid[1][6] = 1;
-  grid[2][0] = 1;
-  grid[2][2] = 1;
-  grid[2][4] = 1;
-  grid[2][5] = 1;
-  grid[3][4] = 1;
+    grid[1][6] = 1;
+    grid[2][0] = 1;
+    grid[2][2] = 1;
+    grid[2][4] = 1;
+    grid[2][5] = 1;
+    grid[3][4] = 1;
 
-  cv::Mat mapImg = drawMap(grid);
+    cv::Mat mapImg = drawMap(grid);
 
-  Point_t start = {5, 3};  // NOLINT
-  int multiple_pass_counter, visited_counter;
-  std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(grid,
-                                                                              start,
-                                                                              multiple_pass_counter,
-                                                                              visited_counter);
+    Point_t start = {5, 3};  // NOLINT
+    int multiple_pass_counter, visited_counter;
+    std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(
+        grid, start, multiple_pass_counter, visited_counter);
 
-  cv::Mat pathImg = mapImg.clone();
-  cv::Mat pathViz = drawPath(mapImg, pathImg, start, path);
-  cv::imwrite("/tmp/testDeadEnd3WithTopRow.png", pathViz);
+    cv::Mat pathImg = mapImg.clone();
+    cv::Mat pathViz = drawPath(mapImg, pathImg, start, path);
+    cv::imwrite("/tmp/testDeadEnd3WithTopRow.png", pathViz);
 
-  // By Adding the nodes of the path to the set, we only retain the unique elements
-  std::set<Point_t, CompareByPosition> pathSet(path.begin(), path.end());
+    // By Adding the nodes of the path to the set, we only retain the unique elements
+    std::set<Point_t, CompareByPosition> pathSet(path.begin(), path.end());
 
-  // Because the area is 4*4 and there are2 obstacle cells
-  ASSERT_EQ((7 * 9) - 6 - 7, pathSet.size());
+    // Because the area is 4*4 and there are2 obstacle cells
+    ASSERT_EQ((7 * 9) - 6 - 7, pathSet.size());
 }
 
 /**
@@ -385,23 +358,23 @@ TEST(TestBoustrophedonStc, testDeadEnd3WithTopRow)
  * @param grid
  * @return 2D 8-bit single-channel image
  */
-cv::Mat drawMap(std::vector<std::vector<bool> > const& grid)
+cv::Mat drawMap(std::vector<std::vector<bool>> const& grid)
 {
-  int y_size = static_cast<int>(grid.size());
-  int x_size = static_cast<int>(grid[0].size());
+    int y_size = static_cast<int>(grid.size());
+    int x_size = static_cast<int>(grid[0].size());
 
-  cv::Mat mapImg = cv::Mat::zeros(y_size, x_size, CV_8U);  // CV_8U 8bit unsigned int 1 channel
-  for (int k = 0; k < y_size; k++)
-  {
-    for (int l = 0; l < x_size; l++)
+    cv::Mat mapImg = cv::Mat::zeros(y_size, x_size, CV_8U);  // CV_8U 8bit unsigned int 1 channel
+    for (int k = 0; k < y_size; k++)
     {
-      if (grid[k][l])
-      {
-        cv::rectangle(mapImg, {l, k}, {l, k}, 255);  // NOLINT
-      }
+        for (int l = 0; l < x_size; l++)
+        {
+            if (grid[k][l])
+            {
+                cv::rectangle(mapImg, {l, k}, {l, k}, 255);  // NOLINT
+            }
+        }
     }
-  }
-  return mapImg;
+    return mapImg;
 }
 
 /**
@@ -413,43 +386,34 @@ cv::Mat drawMap(std::vector<std::vector<bool> > const& grid)
  * @param path the actual path to be drawn
  * @return 2D RGB image for visualisation purposes
  */
-cv::Mat drawPath(const cv::Mat &mapImg,
-                 const cv::Mat &pathImg,
-                 const Point_t &start,
-                 std::list<Point_t> &path)
+cv::Mat drawPath(const cv::Mat& mapImg, const cv::Mat& pathImg, const Point_t& start, std::list<Point_t>& path)
 {
-  cv::Mat pathViz = cv::Mat::zeros(mapImg.cols, mapImg.rows, CV_8UC3);
-  std::vector<cv::Mat> channels;
-  channels.push_back(mapImg.clone());
-  channels.push_back(mapImg.clone());
-  channels.push_back(mapImg.clone());
-  cv::merge(channels, pathViz);
+    cv::Mat pathViz = cv::Mat::zeros(mapImg.cols, mapImg.rows, CV_8UC3);
+    std::vector<cv::Mat> channels;
+    channels.push_back(mapImg.clone());
+    channels.push_back(mapImg.clone());
+    channels.push_back(mapImg.clone());
+    cv::merge(channels, pathViz);
 
-  int step = 0;
-  for (std::list<Point_t>::iterator it = path.begin(); it != path.end(); ++it)
-  {
-//      std::cout << "Path at (" << it->x << ", " << it->y << ")" << std::endl;
-    cv::rectangle(pathImg, {it->x, it->y}, {it->x, it->y}, 255);  // NOLINT
+    int step = 0;
+    for (std::list<Point_t>::iterator it = path.begin(); it != path.end(); ++it)
+    {
+        //      std::cout << "Path at (" << it->x << ", " << it->y << ")" << std::endl;
+        cv::rectangle(pathImg, {it->x, it->y}, {it->x, it->y}, 255);  // NOLINT
 
-    // Color the path in lighter and lighter color towards the end
-    step++;
-    int value = ((step * 200) / static_cast<int>(path.size())) + 50;
-    cv::Scalar color(value, 128, 128);
-    cv::rectangle(pathViz, {it->x, it->y}, {it->x, it->y}, color);  // NOLINT
-  }
+        // Color the path in lighter and lighter color towards the end
+        step++;
+        int value = ((step * 200) / static_cast<int>(path.size())) + 50;
+        cv::Scalar color(value, 128, 128);
+        cv::rectangle(pathViz, {it->x, it->y}, {it->x, it->y}, color);  // NOLINT
+    }
 
-  // Draw the start and end in green and red, resp.
-  cv::Scalar green(0, 255, 0);
-  cv::Scalar red(0, 0, 255);
-  cv::rectangle(pathViz,
-  {start.x, start.y},
-  {start.x, start.y},
-  green);
-  cv::rectangle(pathViz,
-  {path.back().x, path.back().y},
-  {path.back().x, path.back().y},
-  red);
-  return pathViz;
+    // Draw the start and end in green and red, resp.
+    cv::Scalar green(0, 255, 0);
+    cv::Scalar red(0, 0, 255);
+    cv::rectangle(pathViz, {start.x, start.y}, {start.x, start.y}, green);
+    cv::rectangle(pathViz, {path.back().x, path.back().y}, {path.back().x, path.back().y}, red);
+    return pathViz;
 }
 
 /**
@@ -459,14 +423,14 @@ cv::Mat drawPath(const cv::Mat &mapImg,
  * @param start where does the path start?
  * @return
  */
-int calcDifference(const cv::Mat &mapImg, const cv::Mat &pathImg, const Point_t& start)
+int calcDifference(const cv::Mat& mapImg, const cv::Mat& pathImg, const Point_t& start)
 {
-  cv::Mat floodfilledImg = mapImg.clone();
-  cv::floodFill(floodfilledImg, {start.x, start.y}, 255);  // NOLINT
-  cv::Mat difference;
-  cv::subtract(floodfilledImg, pathImg, difference);
+    cv::Mat floodfilledImg = mapImg.clone();
+    cv::floodFill(floodfilledImg, {start.x, start.y}, 255);  // NOLINT
+    cv::Mat difference;
+    cv::subtract(floodfilledImg, pathImg, difference);
 
-  return cv::countNonZero(difference);
+    return cv::countNonZero(difference);
 }
 
 /**
@@ -474,19 +438,19 @@ int calcDifference(const cv::Mat &mapImg, const cv::Mat &pathImg, const Point_t&
  * @param grid
  * @return
  */
-Point_t findStart(std::vector<std::vector<bool> > const& grid)
+Point_t findStart(std::vector<std::vector<bool>> const& grid)
 {
-  unsigned int seed = time(NULL);
-  int y_size = grid.size();
-  int x_size = grid[0].size();
+    unsigned int seed = time(NULL);
+    int y_size = grid.size();
+    int x_size = grid[0].size();
 
-  Point_t start = {rand_r(&seed) % x_size, rand_r(&seed) % y_size};  // Start in some random place
-  while (grid[start.y][start.x])
-  {
-    // Try to find a better starting point that is not inside an obstacle
-    start = {rand_r(&seed) % x_size, rand_r(&seed) % y_size};  // Start in some random place
-  }
-  return start;
+    Point_t start = {rand_r(&seed) % x_size, rand_r(&seed) % y_size};  // Start in some random place
+    while (grid[start.y][start.x])
+    {
+        // Try to find a better starting point that is not inside an obstacle
+        start = {rand_r(&seed) % x_size, rand_r(&seed) % y_size};  // Start in some random place
+    }
+    return start;
 }
 
 /*
@@ -503,50 +467,48 @@ Point_t findStart(std::vector<std::vector<bool> > const& grid)
  */
 TEST(TestBoustrophedonStc, testRandomMap)
 {
-  // Seed pseudorandom sequence to create *reproducible test
-  unsigned int seed = 12345;
-  int failures = 0;
-  int success = 0;
-  int tests = 0;
-  for (int i = 0; i < 5; ++i)
-  // Or use https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#repeating-the-tests
-  {
-    tests++;
-    int x_size = rand_r(&seed) % 100 + 1;
-    int y_size = rand_r(&seed) % 100 + 1;
-    std::vector<std::vector<bool> > grid = makeTestGrid(x_size, y_size, false);
-    randomFillTestGrid(grid, 20);  // ...% fill of obstacles
-
-    cv::Mat mapImg = drawMap(grid);
-    Point_t start = findStart(grid);
-    int multiple_pass_counter, visited_counter;
-    std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(grid,
-                                                                                start,
-                                                                                multiple_pass_counter,
-                                                                                visited_counter);
-
-    cv::Mat pathImg = mapImg.clone();
-    cv::Mat pathViz = drawPath(mapImg, pathImg, start, path);
-    int differentPixelCount = calcDifference(mapImg, pathImg, start);
-    if (differentPixelCount)
+    // Seed pseudorandom sequence to create *reproducible test
+    unsigned int seed = 12345;
+    int failures = 0;
+    int success = 0;
+    int tests = 0;
+    for (int i = 0; i < 5; ++i)
+    // Or use https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#repeating-the-tests
     {
-      cv::imwrite("/tmp/" + std::to_string(i) + "_path_viz.png", pathViz);
-      failures++;
-    }
-    else
-    {
-      success++;
-    }
-    EXPECT_EQ(0, differentPixelCount);
-  }
+        tests++;
+        int x_size = rand_r(&seed) % 100 + 1;
+        int y_size = rand_r(&seed) % 100 + 1;
+        std::vector<std::vector<bool>> grid = makeTestGrid(x_size, y_size, false);
+        randomFillTestGrid(grid, 20);  // ...% fill of obstacles
 
-  ASSERT_EQ(0, failures);
-  ASSERT_EQ(tests, success);
+        cv::Mat mapImg = drawMap(grid);
+        Point_t start = findStart(grid);
+        int multiple_pass_counter, visited_counter;
+        std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(
+            grid, start, multiple_pass_counter, visited_counter);
+
+        cv::Mat pathImg = mapImg.clone();
+        cv::Mat pathViz = drawPath(mapImg, pathImg, start, path);
+        int differentPixelCount = calcDifference(mapImg, pathImg, start);
+        if (differentPixelCount)
+        {
+            cv::imwrite("/tmp/" + std::to_string(i) + "_path_viz.png", pathViz);
+            failures++;
+        }
+        else
+        {
+            success++;
+        }
+        EXPECT_EQ(0, differentPixelCount);
+    }
+
+    ASSERT_EQ(0, failures);
+    ASSERT_EQ(tests, success);
 }
 
 // Run all the tests that were declared with TEST()
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
-  testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

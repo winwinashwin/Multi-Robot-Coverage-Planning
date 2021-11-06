@@ -1,6 +1,7 @@
 import numpy as np
 from math import sqrt
 
+
 def half_circle(start, end, previous=None):
     """Generate a half circle between start and end, returns interpolated vector i and half-circle j coordinates"""
 
@@ -18,7 +19,8 @@ def mwm(start, end, previous, v_depth=1.0, v_bottom_off_center=0.0):
     with a small v in the middle
     :param start: one top of the v
     :param end: the other top of the v
-    :param previous: To indicate direction of the V (to not make a ^), previous is the point that comes before the start of the V (so the bottom-left point of an M or top-left in a W)
+    :param previous: To indicate direction of the V (to not make a ^), previous is the point
+    that comes before the start of the V (so the bottom-left point of an M or top-left in a W)
     :return: yields all the points of the v (so the bottom of the v)
 
     >>> mwm(np.array((1, 2)), np.array((2, 3)), np.array((3, 0)))
@@ -30,7 +32,7 @@ def mwm(start, end, previous, v_depth=1.0, v_bottom_off_center=0.0):
     #                       W W (v point up)       V V with the inner-v point
     start, end, previous = np.array(start), np.array(end), np.array(previous)
 
-    r = (end - start) / 2.
+    r = (end - start) / 2.0
     middle = start + r
 
     delta_ver = previous - start

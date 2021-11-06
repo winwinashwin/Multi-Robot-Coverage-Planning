@@ -6,12 +6,12 @@ find_package(catkin REQUIRED COMPONENTS
         base_local_planner
         costmap_2d
         nav_core
-        rviz_visual_tools
+        geometry_msgs
         pluginlib
         roscpp
         roslint
-        rostest
         tf
+        tf2
         )
 find_package(OpenCV)
 include_directories(${OpenCV_INCLUDE_DIRS})
@@ -27,11 +27,15 @@ catkin_package(
         LIBRARIES ${PROJECT_NAME}
         CATKIN_DEPENDS
         base_local_planner
+        tf2
         costmap_2d
         nav_core
         pluginlib
         roscpp
 )
+
+roslint_cpp()
+roslint_python()
 
 add_library(${PROJECT_NAME}
         src/common.cpp
@@ -42,12 +46,19 @@ add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EX
 target_link_libraries(${PROJECT_NAME}
         ${catkin_LIBRARIES}
         )
-add_executable(test_node src/main.cpp)
-target_link_libraries(test_node ${catkin_LIBRARIES} ${PROJECT_NAME} ${OpenCV_LIBRARIES})
+
+add_executable(path_planner src/main.cpp)
+target_link_libraries(path_planner ${catkin_LIBRARIES} ${PROJECT_NAME} ${OpenCV_LIBRARIES})
+add_dependencies(path_planner ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
 install(TARGETS
         ${PROJECT_NAME}
         ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        )
+
+install(TARGETS path_planner
+        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
         )
 
 install(DIRECTORY include/${PROJECT_NAME}
@@ -60,7 +71,8 @@ install(FILES fcpp_plugin.xml
 
 catkin_install_python(
         PROGRAMS
-        nodes/coverage_progress
+        nodes/coverage_progress_visualizer.py
+        nodes/optimizer.py
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
@@ -75,8 +87,8 @@ if (CATKIN_ENABLE_TESTING)
     include_directories(${OpenCV_INCLUDE_DIRS})
     target_link_libraries(test_boustrophedon_stc ${OpenCV_LIBRARIES})
 
-    add_rostest(test/${PROJECT_NAME}/test_${PROJECT_NAME}.test)
+    find_package(roslaunch REQUIRED)
+    roslaunch_add_file_check(launch)
 
+    roslint_add_test()
 endif ()
-
-roslint_cpp()
