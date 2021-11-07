@@ -1,6 +1,13 @@
 # Multi-Robot Coverage Planning
 
+[![ros-ci](https://github.com/nocoinman/MRCP/actions/workflows/ros-ci.yaml/badge.svg)](https://github.com/nocoinman/MRCP/actions/workflows/ros-ci.yaml)
+[![lint](https://github.com/nocoinman/MRCP/actions/workflows/lint.yaml/badge.svg)](https://github.com/nocoinman/MRCP/actions/workflows/lint.yaml)
+
+**Developed by  : Team Curious Comrades**
+
 **Developed for : AIITRA Robotics Challenge 2021**
+
+Tested on: ROS Noetic + Gazebo 11 + Ubuntu 20.04 LTS
 
 ## Description
 
