@@ -2,6 +2,7 @@
 #define CONTROLLER_CONTROLLER_NODE_H
 
 #include "controller/controller.h"
+
 #include <dynamic_reconfigure/server.h>
 #include <geometry_msgs/Point.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -33,7 +34,6 @@ void print_parameters();
 void printPoses();
 double dist2D(double x_err, double y_err);
 void controllerSelector(int type);
-
 
 // Generic pose variables
 geometry_msgs::Transform tfCurPose;
@@ -70,7 +70,7 @@ geometry_msgs::Twist output_combined;
 // Controller logic
 int controlType = 0;
 bool controller_enabled = true;
-bool enabled_on_boot =  true;
+bool enabled_on_boot = true;
 bool waiting_for_setpoint = false;
 bool feedback_long_enabled = false;
 bool feedback_lat_enabled = false;
@@ -81,7 +81,6 @@ bool feedforward_ang_enabled = false;
 bool controller_debug_enabled = false;
 bool holonomic_robot = false;
 bool track_base_link = false;
-
 
 // Primary feedback controller parameters
 double Kp_long = 0, Ki_long = 0, Kd_long = 0;
@@ -168,6 +167,5 @@ double min_loop_frequency = 1, max_loop_frequency = 1000;
 int measurements_received = 0;
 
 tracking_pid::Controller pid_controller;
-
 
 #endif  // CONTROLLER_CONTROLLER_NODE_H

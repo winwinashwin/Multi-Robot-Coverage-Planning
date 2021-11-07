@@ -153,7 +153,7 @@ class CoverageProgressNode(object):
 
                 if cell_in_coverage_circle and cell_in_grid:
                     # self.grid_data[array_index] *= 1.0 - self.coverage_effectivity
-                    self.grid_data[array_index] = 100*self.coverage_effectivity
+                    self.grid_data[array_index] = 100 * self.coverage_effectivity
         else:
             rospy.logdebug(
                 "x_point %i y_point %i, x_meas %f, y_meas %f",

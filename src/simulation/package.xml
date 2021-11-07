@@ -61,7 +61,7 @@
     <exec_depend>turtlebot3_gazebo</exec_depend>
     <exec_depend>bringup</exec_depend>
     <exec_depend>multirobot_map_merge</exec_depend>
-
+    <exec_depend>turtlebot3_description</exec_depend>
     <!-- The export tag contains other, unspecified, tags -->
     <export>
         <gazebo_ros gazebo_model_path="${prefix}/models"/>

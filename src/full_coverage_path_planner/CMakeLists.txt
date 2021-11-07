@@ -14,8 +14,6 @@ find_package(catkin REQUIRED COMPONENTS
         tf
         tf2
         )
-find_package(OpenCV)
-include_directories(${OpenCV_INCLUDE_DIRS})
 include_directories(
         include
         test/include
@@ -28,8 +26,10 @@ catkin_package(
         LIBRARIES ${PROJECT_NAME}
         CATKIN_DEPENDS
         base_local_planner
+        geometry_msgs
         rviz_visual_tools
         tf2
+        tf
         costmap_2d
         nav_core
         pluginlib
@@ -75,6 +75,7 @@ catkin_install_python(
         PROGRAMS
         nodes/coverage_progress_visualizer.py
         nodes/optimizer.py
+        nodes/multi_robot_bringup.py
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

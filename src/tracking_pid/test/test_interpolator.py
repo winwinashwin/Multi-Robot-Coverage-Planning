@@ -16,12 +16,13 @@ class TestSectionInterpolator(unittest.TestCase):
             quaternion_in.x,
             quaternion_in.y,
             quaternion_in.z,
-            quaternion_in.w)
+            quaternion_in.w,
+        )
         euler = tf.transformations.euler_from_quaternion(quaternion)
         return (euler[2] + math.pi) % (2 * math.pi) - math.pi  # wrap
 
     def test_interpolate_path_translation(self):
-        """ Test interpolation for translation
+        """Test interpolation for translation
         Accelerate at 1 m/s2 to 1m/s, keep 1s and deccelerate to standing still
         Total movement should be 2m.
         Trajectory is tested at different times
@@ -49,9 +50,15 @@ class TestSectionInterpolator(unittest.TestCase):
         pose2.pose.orientation.w = quaternion[3]
         path.poses.append(pose2)
 
-        current_section = SectionInterpolation(pose1, pose2, rospy.Time(0.0),
-                                               self._target_x_vel, self._target_x_acc,
-                                               self._target_yaw_vel, self._target_yaw_acc)
+        current_section = SectionInterpolation(
+            pose1,
+            pose2,
+            rospy.Time(0.0),
+            self._target_x_vel,
+            self._target_x_acc,
+            self._target_yaw_vel,
+            self._target_yaw_acc,
+        )
 
         # Acceleration phase x/theta = 0.5*a*t^2, v/dtheta=a*t
         tp = current_section.interpolate_with_acceleration(rospy.Time(0.0))
@@ -85,7 +92,7 @@ class TestSectionInterpolator(unittest.TestCase):
         self.assertAlmostEqual(tp.velocity.linear.x, 0.0)
 
     def test_interpolate_path_rotation_left(self):
-        """ Test interpolation for rotation to the left
+        """Test interpolation for rotation to the left
         Accelerate at 1 rad/s2 to 1rad/s to the left, keep 1s and deccelerate to standing still
         Total movement should be 2 rad.
         Trajectory is tested at different times
@@ -113,9 +120,15 @@ class TestSectionInterpolator(unittest.TestCase):
         pose2.pose.orientation.w = quaternion[3]
         path.poses.append(pose2)
 
-        current_section = SectionInterpolation(pose1, pose2, rospy.Time(0.0),
-                                               self._target_x_vel, self._target_x_acc,
-                                               self._target_yaw_vel, self._target_yaw_acc)
+        current_section = SectionInterpolation(
+            pose1,
+            pose2,
+            rospy.Time(0.0),
+            self._target_x_vel,
+            self._target_x_acc,
+            self._target_yaw_vel,
+            self._target_yaw_acc,
+        )
 
         # Acceleration phase x/theta = 0.5*a*t^2, v/dtheta=a*t
         tp = current_section.interpolate_with_acceleration(rospy.Time(0.0))
@@ -156,7 +169,7 @@ class TestSectionInterpolator(unittest.TestCase):
         self.assertAlmostEqual(tp.velocity.angular.z, 0.0)
 
     def test_interpolate_path_rotation_right(self):
-        """ Test interpolation for rotation to the right
+        """Test interpolation for rotation to the right
         Accelerate at 1 rad/s2 to 1rad/s to the right, keep 1s and deccelerate to standing still
         Total movement should be -2 rad.
         Trajectory is tested at different times
@@ -184,9 +197,15 @@ class TestSectionInterpolator(unittest.TestCase):
         pose2.pose.orientation.w = quaternion[3]
         path.poses.append(pose2)
 
-        current_section = SectionInterpolation(pose1, pose2, rospy.Time(0.0),
-                                               self._target_x_vel, self._target_x_acc,
-                                               self._target_yaw_vel, self._target_yaw_acc)
+        current_section = SectionInterpolation(
+            pose1,
+            pose2,
+            rospy.Time(0.0),
+            self._target_x_vel,
+            self._target_x_acc,
+            self._target_yaw_vel,
+            self._target_yaw_acc,
+        )
 
         # Acceleration phase x/theta = 0.5*a*t^2, v/dtheta=a*t
         tp = current_section.interpolate_with_acceleration(rospy.Time(0.0))
@@ -227,5 +246,5 @@ class TestSectionInterpolator(unittest.TestCase):
         self.assertAlmostEqual(tp.velocity.angular.z, 0.0)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

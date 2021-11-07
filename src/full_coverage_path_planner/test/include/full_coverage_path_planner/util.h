@@ -4,9 +4,9 @@
 // Created by nobleo on 27-9-18.
 //
 
+#include <cstdlib>
+#include <ctime>
 #include <full_coverage_path_planner/common.h>
-#include <stdlib.h>
-#include <time.h>
 #include <vector>
 
 #ifndef FULL_COVERAGE_PATH_PLANNER_UTIL_H

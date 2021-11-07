@@ -1,7 +1,7 @@
 #include "full_coverage_path_planner/boustrophedon_stc.h"
 
 #include <algorithm>
-#include <geometry_msgs/PoseArray.h>
+#include <geometry_msgs/PoseStamped.h>
 #include <list>
 #include <nav_msgs/OccupancyGrid.h>
 #include <nav_msgs/Path.h>
@@ -18,13 +18,14 @@
 #endif
 
 using PoseStamped = geometry_msgs::PoseStamped;
-using PoseArray = geometry_msgs::PoseArray;
 
-static double euDist2D(const PoseStamped &p1, const PoseStamped &p2) {
+static double euDist2D(const PoseStamped& p1, const PoseStamped& p2)
+{
     return sqrt(pow(p1.pose.position.x - p2.pose.position.x, 2) + pow(p1.pose.position.y - p2.pose.position.y, 2));
 }
 
-static PoseStamped parametricInterp1(const PoseStamped &p1, const PoseStamped &p2, double alpha) {
+static PoseStamped parametricInterp1(const PoseStamped& p1, const PoseStamped& p2, double alpha)
+{
     PoseStamped p;
     p.header.frame_id = p1.header.frame_id;
     p.pose.orientation = p1.pose.orientation;
@@ -33,7 +34,8 @@ static PoseStamped parametricInterp1(const PoseStamped &p1, const PoseStamped &p
     return p;
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv)
+{
     ros::init(argc, argv, "test");
     ros::NodeHandle nh;
 
@@ -70,7 +72,7 @@ int main(int argc, char **argv) {
     // Boustrophedon path planning
     int multiple_pass_counter, visited_counter;
     std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(
-            grid, scaled, multiple_pass_counter, visited_counter);
+        grid, scaled, multiple_pass_counter, visited_counter);
 
     // path now has the indices of corner points in the path, we now convert that to real world coordinates
     std::vector<PoseStamped> plan;
@@ -82,11 +84,10 @@ int main(int argc, char **argv) {
 #if VISUALIZE_PATH
     std::vector<geometry_msgs::Point> guiPath;
     guiPath.reserve(plan.size());
-    std::for_each(plan.begin(), plan.end(), [&guiPath](geometry_msgs::PoseStamped &pose) {
-        guiPath.push_back(pose.pose.position);
-    });
+    std::for_each(plan.begin(), plan.end(),
+                  [&guiPath](geometry_msgs::PoseStamped& pose) { guiPath.push_back(pose.pose.position); });
     visual_tools_->loadMarkerPub(false, true);
-    visual_tools_->publishPath(guiPath);
+    visual_tools_->publishPath(guiPath, rviz_visual_tools::BLUE, 0.02);
     visual_tools_->trigger();
 #endif
 
@@ -97,14 +98,14 @@ int main(int argc, char **argv) {
     ROS_INFO("Path computed. Up-sampling...");
     for (size_t i = 0; i < plan.size() - 1; ++i)
     {
-        double mul = 0.5*euDist2D(plan[i], plan[i + 1]) / floor(euDist2D(plan[i], plan[i + 1]) / robotRadius);
+        double mul = 0.5 * euDist2D(plan[i], plan[i + 1]) / floor(euDist2D(plan[i], plan[i + 1]) / robotRadius);
         double a = 0;
         while (a < 1)
         {
             upSampled.push_back(parametricInterp1(plan[i], plan[i + 1], a));
             a += mul;
         }
-        upSampled.push_back(plan[i+1]);
+        upSampled.push_back(plan[i + 1]);
     }
     ROS_INFO("Up-sampling complete");
     ROS_INFO("Waiting for number of agents");
@@ -145,7 +146,8 @@ int main(int argc, char **argv) {
     }
     ROS_ERROR_STREAM(upSampled.size());
     size_t s = 0;
-    for (size_t i = 0; i < nAgents; ++i) {
+    for (size_t i = 0; i < nAgents; ++i)
+    {
         s += agentPaths[i].poses.size();
     }
     ROS_ERROR_STREAM(s);

@@ -8,7 +8,13 @@ from nav_msgs.msg import Path
 from std_msgs.msg import Bool
 from std_srvs.srv import SetBool
 from tracking_pid.cfg import TargetVelocityConfig
-from tracking_pid.msg import traj_point, FollowPathAction, FollowPathGoal, FollowPathResult, FollowPathFeedback
+from tracking_pid.msg import (
+    traj_point,
+    FollowPathAction,
+    FollowPathGoal,
+    FollowPathResult,
+    FollowPathFeedback,
+)
 from visualization_msgs.msg import Marker
 import actionlib
 import dynamic_reconfigure.client
@@ -29,6 +35,7 @@ class SectionInterpolation(object):
 
     the interpolate method then determines an intermediate point along the section given some progress along the section
     """
+
     def __init__(self, from_, to, start_time, x_vel, x_acc, yaw_vel, yaw_acc):
         """
         Interpolate over the given section with some x and yaw velocities
@@ -50,34 +57,41 @@ class SectionInterpolation(object):
         self._yaw_vel = yaw_vel
         self._yaw_acc_decc = yaw_acc
 
-
-
         self.duration_on_section = rospy.Duration(0)
 
         self.section_start_pose_stamped = from_  # type: PoseStamped
         self.section_end_pose_stamped = to  # type: PoseStamped
 
-        self._start_xyz = np.array([self.section_start_pose_stamped.pose.position.x,
-                                    self.section_start_pose_stamped.pose.position.y,
-                                    self.section_start_pose_stamped.pose.position.z])
-        self._end_xyz = np.array([self.section_end_pose_stamped.pose.position.x,
-                                  self.section_end_pose_stamped.pose.position.y,
-                                  self.section_end_pose_stamped.pose.position.z])
-
+        self._start_xyz = np.array(
+            [
+                self.section_start_pose_stamped.pose.position.x,
+                self.section_start_pose_stamped.pose.position.y,
+                self.section_start_pose_stamped.pose.position.z,
+            ]
+        )
+        self._end_xyz = np.array(
+            [
+                self.section_end_pose_stamped.pose.position.x,
+                self.section_end_pose_stamped.pose.position.y,
+                self.section_end_pose_stamped.pose.position.z,
+            ]
+        )
 
         quaternion = (
-                    self.section_start_pose_stamped.pose.orientation.x,
-                    self.section_start_pose_stamped.pose.orientation.y,
-                    self.section_start_pose_stamped.pose.orientation.z,
-                    self.section_start_pose_stamped.pose.orientation.w)
+            self.section_start_pose_stamped.pose.orientation.x,
+            self.section_start_pose_stamped.pose.orientation.y,
+            self.section_start_pose_stamped.pose.orientation.z,
+            self.section_start_pose_stamped.pose.orientation.w,
+        )
         euler = tf.transformations.euler_from_quaternion(quaternion)
         self._start_yaw = euler[2]
 
         quaternion = (
-                    self.section_end_pose_stamped.pose.orientation.x,
-                    self.section_end_pose_stamped.pose.orientation.y,
-                    self.section_end_pose_stamped.pose.orientation.z,
-                    self.section_end_pose_stamped.pose.orientation.w)
+            self.section_end_pose_stamped.pose.orientation.x,
+            self.section_end_pose_stamped.pose.orientation.y,
+            self.section_end_pose_stamped.pose.orientation.z,
+            self.section_end_pose_stamped.pose.orientation.w,
+        )
         euler = tf.transformations.euler_from_quaternion(quaternion)
         self._end_yaw = euler[2]
 
@@ -85,66 +99,100 @@ class SectionInterpolation(object):
 
         self._delta = self._end_xyz - self._start_xyz
         self._delta_yaw = self._end_yaw - self._start_yaw
-        self._delta_yaw = ( self._delta_yaw + np.pi) % (2 * np.pi ) - np.pi
-
-
+        self._delta_yaw = (self._delta_yaw + np.pi) % (2 * np.pi) - np.pi
 
         self.length_of_section = np.linalg.norm(self._delta)
         self.length_of_section_ang = np.linalg.norm(self._delta_yaw)
 
-        self.time_x_acc_decc = self._x_vel/self._x_acc_decc  # Time during (de) and acceleration phases t = v/a
-        self.length_x_acc_decc =  0.5*self._x_acc_decc*(self.time_x_acc_decc*self.time_x_acc_decc) # Translation during acceleration phase x = 0.5a*t^2
-        self.length_x_vel = self.length_of_section - self.length_x_acc_decc - self.length_x_acc_decc # Translation during constant velocity phase
-        self.time_x_vel  = self.length_x_vel/self._x_vel  # Time during constant velocity phase t = v/a
+        self.time_x_acc_decc = (
+            self._x_vel / self._x_acc_decc
+        )  # Time during (de) and acceleration phases t = v/a
+        self.length_x_acc_decc = (
+            0.5 * self._x_acc_decc * (self.time_x_acc_decc * self.time_x_acc_decc)
+        )  # Translation during acceleration phase x = 0.5a*t^2
+        self.length_x_vel = (
+            self.length_of_section - self.length_x_acc_decc - self.length_x_acc_decc
+        )  # Translation during constant velocity phase
+        self.time_x_vel = (
+            self.length_x_vel / self._x_vel
+        )  # Time during constant velocity phase t = v/a
         self._x_vel_adjusted = self._x_vel
 
-        if self.time_x_vel < 0:  # No constant acceleration phase. Recompute (de)-acceleration phase
-            self.length_x_acc_decc = 0.5*self.length_of_section
-            self.time_x_acc_decc = math.sqrt(2*self.length_x_acc_decc/self._x_acc_decc) # x = 0.5a*t^2 -> 2x/a = t^2 -> t = sqrt(2x/a)
-            self._x_vel_adjusted = self._x_acc_decc*self.time_x_acc_decc
+        if (
+            self.time_x_vel < 0
+        ):  # No constant acceleration phase. Recompute (de)-acceleration phase
+            self.length_x_acc_decc = 0.5 * self.length_of_section
+            self.time_x_acc_decc = math.sqrt(
+                2 * self.length_x_acc_decc / self._x_acc_decc
+            )  # x = 0.5a*t^2 -> 2x/a = t^2 -> t = sqrt(2x/a)
+            self._x_vel_adjusted = self._x_acc_decc * self.time_x_acc_decc
             self.length_x_vel = 0.0
             self.time_x_vel = 0.0
 
-        self.time_yaw_acc_decc = self._yaw_vel/self._yaw_acc_decc  # Time during acceleration phase t = v/a
-        self.length_yaw_acc_decc =  0.5*self._yaw_acc_decc*(self.time_yaw_acc_decc*self.time_yaw_acc_decc) # Translation during acceleration phase x = 0.5a*t^2
-        self.length_yaw_vel = self.length_of_section_ang - self.length_yaw_acc_decc - self.length_yaw_acc_decc # Translation during constant velocity phase
-        self.time_yaw_vel  = self.length_yaw_vel/self._yaw_vel  # Time during constant velocity phase t = v/a
+        self.time_yaw_acc_decc = (
+            self._yaw_vel / self._yaw_acc_decc
+        )  # Time during acceleration phase t = v/a
+        self.length_yaw_acc_decc = (
+            0.5
+            * self._yaw_acc_decc
+            * (self.time_yaw_acc_decc * self.time_yaw_acc_decc)
+        )  # Translation during acceleration phase x = 0.5a*t^2
+        self.length_yaw_vel = (
+            self.length_of_section_ang
+            - self.length_yaw_acc_decc
+            - self.length_yaw_acc_decc
+        )  # Translation during constant velocity phase
+        self.time_yaw_vel = (
+            self.length_yaw_vel / self._yaw_vel
+        )  # Time during constant velocity phase t = v/a
         self._yaw_vel_adjusted = self._yaw_vel
 
-        if self.time_yaw_vel < 0:  # No constant acceleration phase. Recompute (de)-acceleration phase
-            self.length_yaw_acc_decc = 0.5*self.length_of_section_ang
-            self.time_yaw_acc_decc = math.sqrt(2*self.length_yaw_acc_decc/self._yaw_acc_decc) # x = 0.5a*t^2 -> 2x/a = t^2 -> t = sqrt(2x/a)
-            self._yaw_vel_adjusted = self._yaw_acc_decc*self.time_yaw_acc_decc
+        if (
+            self.time_yaw_vel < 0
+        ):  # No constant acceleration phase. Recompute (de)-acceleration phase
+            self.length_yaw_acc_decc = 0.5 * self.length_of_section_ang
+            self.time_yaw_acc_decc = math.sqrt(
+                2 * self.length_yaw_acc_decc / self._yaw_acc_decc
+            )  # x = 0.5a*t^2 -> 2x/a = t^2 -> t = sqrt(2x/a)
+            self._yaw_vel_adjusted = self._yaw_acc_decc * self.time_yaw_acc_decc
             self.length_yaw_vel = 0.0
             self.time_yaw_vel = 0.0
 
+        self.duration_for_section_x = (
+            self.time_x_acc_decc + self.time_x_vel + self.time_x_acc_decc
+        )
+        self.duration_for_section_yaw = (
+            self.time_yaw_acc_decc + self.time_yaw_vel + self.time_yaw_acc_decc
+        )
+        self.duration_for_section = rospy.Duration(
+            max(self.duration_for_section_x, self.duration_for_section_yaw)
+        )
 
-        self.duration_for_section_x = self.time_x_acc_decc + self.time_x_vel + self.time_x_acc_decc
-        self.duration_for_section_yaw = self.time_yaw_acc_decc + self.time_yaw_vel + self.time_yaw_acc_decc
-        self.duration_for_section = rospy.Duration(max(self.duration_for_section_x,self.duration_for_section_yaw))
+        rospy.logdebug("self._x_acc_decc: %f", self._x_acc_decc)
+        rospy.logdebug("self._x_vel: %f", self._x_vel)
+        rospy.logdebug("self.length_of_section: %f", self.length_of_section)
+        rospy.logdebug("self.time_x_acc_decc: %f", self.time_x_acc_decc)
+        rospy.logdebug("self.time_x_vel: %f", self.time_x_vel)
+        rospy.logdebug("self.length_x_acc_decc: %f", self.length_x_acc_decc)
+        rospy.logdebug("self.length_x_vel: %f", self.length_x_vel)
+        rospy.logdebug(
+            "self.duration_for_section_x: %f", self.duration_for_section_x
+        )
 
-        rospy.logdebug("self._x_acc_decc: %f",self._x_acc_decc)
-        rospy.logdebug("self._x_vel: %f",self._x_vel)
-        rospy.logdebug("self.length_of_section: %f",self.length_of_section)
-        rospy.logdebug("self.time_x_acc_decc: %f",self.time_x_acc_decc)
-        rospy.logdebug("self.time_x_vel: %f",self.time_x_vel)
-        rospy.logdebug("self.length_x_acc_decc: %f",self.length_x_acc_decc)
-        rospy.logdebug("self.length_x_vel: %f",self.length_x_vel)
-        rospy.logdebug("self.duration_for_section_x: %f",self.duration_for_section_x)
+        rospy.logdebug("self._yaw_acc_decc: %f", self._yaw_acc_decc)
+        rospy.logdebug("self._yaw_vel: %f", self._yaw_vel)
+        rospy.logdebug("self.length_of_section_ang: %f", self.length_of_section_ang)
+        rospy.logdebug("self.time_yaw_acc_decc: %f", self.time_yaw_acc_decc)
+        rospy.logdebug("self.time_yaw_vel: %f", self.time_yaw_vel)
+        rospy.logdebug("self.length_yaw_acc_decc: %f", self.length_yaw_acc_decc)
+        rospy.logdebug("self.length_yaw_vel: %f", self.length_yaw_vel)
+        rospy.logdebug(
+            "self.duration_for_section_yaw: %f", self.duration_for_section_yaw
+        )
 
-        rospy.logdebug("self._yaw_acc_decc: %f",self._yaw_acc_decc)
-        rospy.logdebug("self._yaw_vel: %f",self._yaw_vel)
-        rospy.logdebug("self.length_of_section_ang: %f",self.length_of_section_ang)
-        rospy.logdebug("self.time_yaw_acc_decc: %f",self.time_yaw_acc_decc)
-        rospy.logdebug("self.time_yaw_vel: %f",self.time_yaw_vel)
-        rospy.logdebug("self.length_yaw_acc_decc: %f",self.length_yaw_acc_decc)
-        rospy.logdebug("self.length_yaw_vel: %f",self.length_yaw_vel)
-        rospy.logdebug("self.duration_for_section_yaw: %f",self.duration_for_section_yaw)
-
-
-        rospy.logdebug("self.duration_for_section: %f",self.duration_for_section.to_sec())
-
-
+        rospy.logdebug(
+            "self.duration_for_section: %f", self.duration_for_section.to_sec()
+        )
 
         self.section_start_time = start_time
         self.x_progress = 0.0
@@ -178,8 +226,6 @@ class SectionInterpolation(object):
         next_pose.pose.orientation.z = quaternion[2]
         next_pose.pose.orientation.w = quaternion[3]
 
-
-
         return next_pose
 
     def interpolate_with_acceleration(self, current_time):
@@ -192,27 +238,30 @@ class SectionInterpolation(object):
         :rtype: PoseStamped
         """
 
-        current_section_time = (current_time - self.section_start_time)
+        current_section_time = current_time - self.section_start_time
         t = current_section_time.to_sec()
 
-
-        if  t < self.time_x_acc_decc:
+        if t < self.time_x_acc_decc:
             tr = t
-            self.x_progress =0.5*self._x_acc_decc*tr*tr
-            self.current_x_vel = self._x_acc_decc*tr
+            self.x_progress = 0.5 * self._x_acc_decc * tr * tr
+            self.current_x_vel = self._x_acc_decc * tr
             if self.x_progress > self.length_x_acc_decc:
                 self.current_x_vel = self._x_vel_adjusted
                 self.x_progress = self.length_x_acc_decc
         elif t < (self.time_x_acc_decc + self.time_x_vel):
-            tr = (t - self.time_x_acc_decc)
-            self.x_progress = self.length_x_acc_decc + self.current_x_vel*tr
+            tr = t - self.time_x_acc_decc
+            self.x_progress = self.length_x_acc_decc + self.current_x_vel * tr
             self.current_x_vel = self._x_vel_adjusted
-            if self.x_progress > (self.length_x_acc_decc+self.length_x_vel):
-                self.x_progress = (self.length_x_acc_decc+self.length_x_vel)
+            if self.x_progress > (self.length_x_acc_decc + self.length_x_vel):
+                self.x_progress = self.length_x_acc_decc + self.length_x_vel
         elif t < (self.time_x_acc_decc + self.time_x_vel + self.time_x_acc_decc):
-            tr = (t - self.time_x_acc_decc - self.time_x_vel)
-            self.x_progress = (self.length_x_acc_decc + self.length_x_vel) + self._x_vel_adjusted*tr - 0.5*self._x_acc_decc*tr*tr
-            self.current_x_vel = self._x_vel_adjusted - self._x_acc_decc*tr
+            tr = t - self.time_x_acc_decc - self.time_x_vel
+            self.x_progress = (
+                (self.length_x_acc_decc + self.length_x_vel)
+                + self._x_vel_adjusted * tr
+                - 0.5 * self._x_acc_decc * tr * tr
+            )
+            self.current_x_vel = self._x_vel_adjusted - self._x_acc_decc * tr
             if self.x_progress > self.length_of_section:
                 self.current_x_vel = 0.0
                 self.x_progress = self.length_of_section
@@ -220,24 +269,29 @@ class SectionInterpolation(object):
             self.current_x_vel = 0.0
             self.x_progress = self.length_of_section
 
-
-        if  t < self.time_yaw_acc_decc:
+        if t < self.time_yaw_acc_decc:
             tr = t
-            self.yaw_progress =0.5*self._yaw_acc_decc*tr*tr
-            self.current_yaw_vel = self._yaw_acc_decc*tr
+            self.yaw_progress = 0.5 * self._yaw_acc_decc * tr * tr
+            self.current_yaw_vel = self._yaw_acc_decc * tr
             if self.yaw_progress > self.length_yaw_acc_decc:
                 self.current_yaw_vel = self._yaw_vel_adjusted
                 self.yaw_progress = self.length_yaw_acc_decc
         elif t < (self.time_yaw_acc_decc + self.time_yaw_vel):
-            tr = (t - self.time_yaw_acc_decc)
-            self.yaw_progress = self.length_yaw_acc_decc + self.current_yaw_vel*tr
+            tr = t - self.time_yaw_acc_decc
+            self.yaw_progress = self.length_yaw_acc_decc + self.current_yaw_vel * tr
             self.current_yaw_vel = self._yaw_vel_adjusted
-            if self.yaw_progress > (self.length_yaw_acc_decc+self.length_yaw_vel):
-                self.yaw_progress = (self.length_yaw_acc_decc+self.length_yaw_vel)
-        elif t < (self.time_yaw_acc_decc + self.time_yaw_vel + self.time_yaw_acc_decc):
-            tr = (t - self.time_yaw_acc_decc - self.time_yaw_vel)
-            self.yaw_progress = (self.length_yaw_acc_decc + self.length_yaw_vel) + self._yaw_vel_adjusted*tr - 0.5*self._yaw_acc_decc*tr*tr
-            self.current_yaw_vel = self._yaw_vel_adjusted - self._yaw_acc_decc*tr
+            if self.yaw_progress > (self.length_yaw_acc_decc + self.length_yaw_vel):
+                self.yaw_progress = self.length_yaw_acc_decc + self.length_yaw_vel
+        elif t < (
+            self.time_yaw_acc_decc + self.time_yaw_vel + self.time_yaw_acc_decc
+        ):
+            tr = t - self.time_yaw_acc_decc - self.time_yaw_vel
+            self.yaw_progress = (
+                (self.length_yaw_acc_decc + self.length_yaw_vel)
+                + self._yaw_vel_adjusted * tr
+                - 0.5 * self._yaw_acc_decc * tr * tr
+            )
+            self.current_yaw_vel = self._yaw_vel_adjusted - self._yaw_acc_decc * tr
             if self.yaw_progress > self.length_of_section_ang:
                 self.current_yaw_vel = 0.0
                 self.yaw_progress = self.length_of_section_ang
@@ -246,12 +300,12 @@ class SectionInterpolation(object):
             self.yaw_progress = self.length_of_section_ang
 
         if self.length_of_section > 0:
-            x_progress_ratio = self.x_progress/self.length_of_section
+            x_progress_ratio = self.x_progress / self.length_of_section
         else:
             x_progress_ratio = 1.0
 
         if self.length_of_section_ang > 0:
-            yaw_progress_ratio = self.yaw_progress/self.length_of_section_ang
+            yaw_progress_ratio = self.yaw_progress / self.length_of_section_ang
         else:
             yaw_progress_ratio = 1.0
         # target_x = start_x + delta_x * progress_on_section
@@ -273,13 +327,12 @@ class SectionInterpolation(object):
         tp.pose.pose.orientation.w = quaternion[3]
         tp.velocity.angular.z = np.sign(self._delta_yaw) * self.current_yaw_vel
 
-
-
-
         return tp
 
     def __repr__(self):
-        return "Section(from_={}, to={}, x_vel={})".format(self._start_xyz, self._end_xyz, self._x_vel)
+        return "Section(from_={}, to={}, x_vel={})".format(
+            self._start_xyz, self._end_xyz, self._x_vel
+        )
 
     @property
     def delta(self):
@@ -294,10 +347,14 @@ class InterpolatorNode(object):
         self.enable_srv = rospy.ServiceProxy("enable_control", SetBool)
         self.reconfigure_client = None  # type: dynamic_reconfigure.client.Client
 
-        self._visualization_pub = rospy.Publisher("interpolator_viz", Marker, queue_size=1)
-        self._pub_finished = rospy.Publisher("trajectory_finished", Bool, queue_size=1)
+        self._visualization_pub = rospy.Publisher(
+            "interpolator_viz", Marker, queue_size=1
+        )
+        self._pub_finished = rospy.Publisher(
+            "trajectory_finished", Bool, queue_size=1
+        )
 
-        self.robot_frame = 'base_link'
+        self.robot_frame = "base_link"
 
         self.listener = tf.TransformListener()
 
@@ -310,9 +367,11 @@ class InterpolatorNode(object):
         self._latest_subgoal_pose = None  # type: PoseStamped
 
         self._paused = False
-        self._pause_sub = rospy.Subscriber("pause", Bool, self._process_pause, queue_size=1)
+        self._pause_sub = rospy.Subscriber(
+            "pause", Bool, self._process_pause, queue_size=1
+        )
 
-        self._target_x_vel = 1.0 # To be overridden by parameters
+        self._target_x_vel = 1.0  # To be overridden by parameters
         self._target_x_acc = 0.2
         self._target_yaw_vel = 0.1
         self._target_yaw_acc = 0.1
@@ -320,9 +379,13 @@ class InterpolatorNode(object):
         self._server = Server(TargetVelocityConfig, self._process_velocity)
 
         self._latest_path_msg = None
-        self._path_sub = rospy.Subscriber("path", Path, self._accept_path_from_topic, queue_size=1)
+        self._path_sub = rospy.Subscriber(
+            "path", Path, self._accept_path_from_topic, queue_size=1
+        )
         self._path_pub = rospy.Publisher("path/viz", Path, queue_size=1, latch=True)
-        self._as = actionlib.SimpleActionServer("follow_path", FollowPathAction, auto_start=False)
+        self._as = actionlib.SimpleActionServer(
+            "follow_path", FollowPathAction, auto_start=False
+        )
         self._as.register_goal_callback(self._accept_goal)
         self._as.start()
 
@@ -330,7 +393,9 @@ class InterpolatorNode(object):
 
     def start_path(self):
         rospy.logdebug("start_path()")
-        self._timer = rospy.Timer(rospy.Duration(1.0/self._rate), self._update_target)
+        self._timer = rospy.Timer(
+            rospy.Duration(1.0 / self._rate), self._update_target
+        )
 
     def stop_path(self):
         rospy.logdebug("stop_path()")
@@ -343,16 +408,26 @@ class InterpolatorNode(object):
             # When we're no longer paused, continue where we left off
             # This is: from the latest sent subgoal, to the same finish point of the current section
             # With the same velocity so the end time will be re-calculated based on the start_time
-            rospy.loginfo("Resuming path with velocities %0.3f m/s %0.3f rad/s and accelerations %0.3f m/s2 %0.3f rad/s2", self._target_x_vel, self._target_yaw_vel, self._target_x_acc, self._target_yaw_acc)
+            rospy.loginfo(
+                "Resuming path with velocities %0.3f m/s %0.3f rad/s and accelerations %0.3f m/s2 %0.3f rad/s2",
+                self._target_x_vel,
+                self._target_yaw_vel,
+                self._target_x_acc,
+                self._target_yaw_acc,
+            )
 
             if start_time is None:
                 start_time = self._latest_subgoal_pose.header.stamp
 
-            self._current_section = SectionInterpolation(self._latest_subgoal_pose,
-                                                         self._current_section.section_end_pose_stamped,
-                                                         start_time,
-                                                         self._target_x_vel, self._target_x_acc,
-                                                         self._target_yaw_vel, self._target_yaw_acc)
+            self._current_section = SectionInterpolation(
+                self._latest_subgoal_pose,
+                self._current_section.section_end_pose_stamped,
+                start_time,
+                self._target_x_vel,
+                self._target_x_acc,
+                self._target_yaw_vel,
+                self._target_yaw_acc,
+            )
 
     def _process_pause(self, bool_msg):
         if bool_msg.data and bool_msg.data != self._paused:
@@ -361,7 +436,9 @@ class InterpolatorNode(object):
             self._paused = bool_msg.data
         elif not bool_msg.data and bool_msg.data != self._paused:
             rospy.loginfo("Unpausing path_interpolator")
-            resume_time = rospy.Time.now() - rospy.Duration(1.0 / self._rate)  # Prevent sending last goal again
+            resume_time = rospy.Time.now() - rospy.Duration(
+                1.0 / self._rate
+            )  # Prevent sending last goal again
             self._paused = bool_msg.data
             self.continue_path(start_time=resume_time)
 
@@ -370,13 +447,19 @@ class InterpolatorNode(object):
         target_yaw_vel = config.target_yaw_vel
 
         if target_x_vel == 0.0 or target_yaw_vel == 0.0:
-            rospy.logwarn("Ignoring ~target_x_vel of {}, ~target_yaw_vel of {}, keeping {}, {}, consider using the pause function".format(target_x_vel, target_yaw_vel,self._target_x_vel, self._target_yaw_vel))
+            rospy.logwarn(
+                "Ignoring ~target_x_vel of {}, ~target_yaw_vel of {}, keeping {}, {}, consider using the pause function".format(
+                    target_x_vel,
+                    target_yaw_vel,
+                    self._target_x_vel,
+                    self._target_yaw_vel,
+                )
+            )
         else:
             self._target_x_vel = target_x_vel
             self._target_x_acc = config.target_x_acc
             self._target_yaw_vel = target_yaw_vel
             self._target_yaw_acc = config.target_yaw_acc
-
 
         self.continue_path()
         return config
@@ -407,14 +490,20 @@ class InterpolatorNode(object):
 
     def _process_path(self, path_msg):
         """Accept and store the path"""
-        rospy.logdebug("_process_path(...). Path has {} poses".format(len(path_msg.poses)))
+        rospy.logdebug(
+            "_process_path(...). Path has {} poses".format(len(path_msg.poses))
+        )
         # Assert that all poses are defined in the same frame
         # TODO: it would be nice to interpolate between poses defines in different frames but that is out of scope
         # TODO: Tracking_pid completely disregards the frame_id and just does everything in the frame
         #   it was configured for, even though it listens to Pose*Stamped*s
 
         if not path_msg.poses:
-            rospy.logwarn("There are no poses in the given path with header {}".format(path_msg.header))
+            rospy.logwarn(
+                "There are no poses in the given path with header {}".format(
+                    path_msg.header
+                )
+            )
             return
 
         # If empty frame_ids are supplied, use the global headers frame_id
@@ -429,7 +518,7 @@ class InterpolatorNode(object):
 
         self._path_pub.publish(path_msg)
 
-         # Path is valid, so lets store it
+        # Path is valid, so lets store it
         self._latest_path_msg = path_msg
 
         target_x_vel = rospy.get_param("~target_x_vel", 1.0)
@@ -437,7 +526,14 @@ class InterpolatorNode(object):
         target_yaw_vel = rospy.get_param("~target_yaw_vel", 1.0)
         target_yaw_acc = rospy.get_param("~target_yaw_acc", 1.0)
         if target_x_vel == 0.0 or target_yaw_vel == 0.0:
-            rospy.logwarn("Ignoring ~target_x_vel of {}, ~target_yaw_vel of {}, keeping {}, {}, consider using the pause function".format(target_x_vel, target_yaw_vel, self._target_x_vel, self._target_yaw_vel))
+            rospy.logwarn(
+                "Ignoring ~target_x_vel of {}, ~target_yaw_vel of {}, keeping {}, {}, consider using the pause function".format(
+                    target_x_vel,
+                    target_yaw_vel,
+                    self._target_x_vel,
+                    self._target_yaw_vel,
+                )
+            )
         else:
             self._target_x_vel = target_x_vel
             self._target_x_acc = target_x_acc
@@ -449,7 +545,9 @@ class InterpolatorNode(object):
             assert self.flip_for_axis in ["X", "Y", "Z"]
 
         if self.flip_for_axis and not self.reconfigure_client:
-            self.reconfigure_client = dynamic_reconfigure.client.Client("controller", timeout=1)
+            self.reconfigure_client = dynamic_reconfigure.client.Client(
+                "controller", timeout=1
+            )
 
         self._path_poses = path_msg.poses
         self._sections = list(zip(self._path_poses, self._path_poses[1:]))
@@ -485,23 +583,43 @@ class InterpolatorNode(object):
             rospy.logdebug_throttle(5.0, "Path_interpolator is paused")
             return
 
-        if not self._current_section or rospy.Time.now() > self._current_section.section_end_time:  # or when past end time of current section, go to next
+        if (
+            not self._current_section
+            or rospy.Time.now() > self._current_section.section_end_time
+        ):  # or when past end time of current section, go to next
             try:
                 start, end = self._sections.pop(0)
-                self._current_section = SectionInterpolation(start, end, event.current_real, self._target_x_vel, self._target_x_acc, self._target_yaw_vel, self._target_yaw_acc)
-                rospy.loginfo("Starting new {}. duration_for_section = {}".format(self._current_section, self._current_section.duration_for_section.to_sec()))
+                self._current_section = SectionInterpolation(
+                    start,
+                    end,
+                    event.current_real,
+                    self._target_x_vel,
+                    self._target_x_acc,
+                    self._target_yaw_vel,
+                    self._target_yaw_acc,
+                )
+                rospy.loginfo(
+                    "Starting new {}. duration_for_section = {}".format(
+                        self._current_section,
+                        self._current_section.duration_for_section.to_sec(),
+                    )
+                )
 
                 if self.flip_for_axis:
                     # Have the control point in front if we are to drive forwards, control point in the back when driving backwards
                     # This makes the robot always keep point up, for Emma that always needs to keep pointing up
-                    self._set_controller_direction(sign=np.sign(self._current_section.delta[axes[self.flip_for_axis]]))
+                    self._set_controller_direction(
+                        sign=np.sign(
+                            self._current_section.delta[axes[self.flip_for_axis]]
+                        )
+                    )
             except IndexError:
                 rospy.logdebug("Path ended")
 
                 loop = rospy.get_param("~loop", 0)
                 if loop != 0:
                     rospy.loginfo("~loop = {}, starting path again".format(loop))
-                    rospy.set_param("~loop", loop-1)
+                    rospy.set_param("~loop", loop - 1)
                     self._process_path(self._latest_path_msg)
                 else:
                     rospy.logdebug("No loop requested or remaining, finishing up")
@@ -511,7 +629,9 @@ class InterpolatorNode(object):
                     self.stop_path()
                 return
 
-        duration_on_section = event.current_real - self._current_section.section_start_time
+        duration_on_section = (
+            event.current_real - self._current_section.section_start_time
+        )
 
         # Distance between duplicated poses is 0, so we can't do the division below.
         # If the duration is 0, then we're done immediately.
@@ -519,14 +639,15 @@ class InterpolatorNode(object):
         # Then, even when the pose.position does not change while pose.orientation does change,
         #  the angular velocity will make the section have a nonzero duration
         if not self._current_section.duration_for_section.is_zero():
-            progress_on_section = (duration_on_section / self._current_section.duration_for_section)
+            progress_on_section = (
+                duration_on_section / self._current_section.duration_for_section
+            )
         else:
             rospy.loginfo("Instantaneous completion of 0-length section")
             progress_on_section = 1
 
         tp = self._current_section.interpolate_with_acceleration(rospy.Time.now())
         tp.pose.header.stamp = event.current_real
-
 
         # TODO: Rotate in the corners, using controller mode 3 tp.controller.data = 3
 
@@ -569,10 +690,12 @@ class InterpolatorNode(object):
         controller_config = self.reconfigure_client.get_configuration()
 
         if controller_config is None:
-            rospy.logfatal("Could not get config to update. Incorrect controller settings are dangerous, exiting to stop driving")
+            rospy.logfatal(
+                "Could not get config to update. Incorrect controller settings are dangerous, exiting to stop driving"
+            )
             exit(-1)
         else:
-            new_l = abs(controller_config['l']) * sign
+            new_l = abs(controller_config["l"]) * sign
 
             rospy.logdebug("New control point distance: {}".format(new_l))
             self.reconfigure_client.update_configuration({"l": new_l})
