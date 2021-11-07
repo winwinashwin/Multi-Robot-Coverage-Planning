@@ -5,9 +5,13 @@
 
     <description>Package for frontier exploration based on wavefront frontier detection.</description>
 
-    <author email="ashwin5059198@gmail.com">Ashwin A Nayar</author>
     <maintainer email="ashwin5059198@gmail.com">Ashwin A Nayar</maintainer>
+
     <license>TODO</license>
+
+    <author email="ashwin5059198@gmail.com">Ashwin A Nayar</author>
+    <author email="gauthamga.gga@gmail.com">Gautham Govind A</author>
+    <author email="harshinechooli@gmail.com">Harshin N</author>
 
     <buildtool_depend>catkin</buildtool_depend>
     <build_depend>roslint</build_depend>

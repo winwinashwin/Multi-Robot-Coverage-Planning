@@ -6,6 +6,7 @@
         Full coverage path planning provides a move_base_flex plugin that can plan a path that will fully cover a given
         area.
         This package has been modified such that a boustophedon pattern is used rather than a spiral algorithm.
+        This package was further modified with scripts and nodes for multi-robot coverage.
     </description>
     <author email="cesar.lopez@nobleo.nl">Cesar Lopez</author>
     <author email="ferry.schoenmakers@nobleo.nl">Ferry Schoenmakers</author>
@@ -14,10 +15,13 @@
     <author>Loy van Beek</author>
     <author>Yury Brodskiy</author>
     <author email="ethanc.kim@uwaterloo.ca">Ethan Kim</author>
-    <maintainer email="cesar.lopez@nobleo.nl">Cesar Lopez</maintainer>
+    <author email="ashwin5059198@gmail.com">Ashwin A Nayar</author>
+    <author email="gauthamga.gga@gmail.com">Gautham Govind A</author>
+    <author email="harshinechooli@gmail.com">Harshin N</author>
+
+    <maintainer email="ashwin5059198@gmail.com">Ashwin A Nayar</maintainer>
 
     <license>Apache 2.0</license>
-    <url>http://wiki.ros.org/full_coverage_path_planner</url>
 
     <buildtool_depend>catkin</buildtool_depend>
     <build_depend>roslint</build_depend>
