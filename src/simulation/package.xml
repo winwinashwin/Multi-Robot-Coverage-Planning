@@ -27,6 +27,9 @@
     <exec_depend>multirobot_map_merge</exec_depend>
     <exec_depend>turtlebot3_description</exec_depend>
 
+    <exec_depend>rospy</exec_depend>
+    <exec_depend>std_msgs</exec_depend>
+    <exec_depend>geometry_msgs</exec_depend>
     <export>
         <gazebo_ros gazebo_model_path="${prefix}/models"/>
     </export>

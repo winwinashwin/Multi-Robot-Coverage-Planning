@@ -40,6 +40,11 @@
     <exec_depend>move_base</exec_depend>
     <exec_depend>multirobot_map_merge</exec_depend>
     <exec_depend>rviz</exec_depend>
+    <exec_depend>nav_msgs</exec_depend>
+    <exec_depend>std_srvs</exec_depend>
+    <exec_depend>rospy</exec_depend>
+    <exec_depend>python3-numpy</exec_depend>
+    <exec_depend>python3-yaml</exec_depend>
     <test_depend>cv_bridge</test_depend>
     <test_depend>rosunit</test_depend>
     <test_depend>tracking_pid</test_depend>

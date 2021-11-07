@@ -16,7 +16,7 @@
     <depend>rospy</depend>
 
     <exec_depend>robot_localization</exec_depend>
-
+    <exec_depend>sensor_msgs</exec_depend>
     <test_depend>roslaunch</test_depend>
     <test_depend>roslint</test_depend>
 

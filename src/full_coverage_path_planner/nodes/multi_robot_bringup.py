@@ -6,7 +6,7 @@ import roslaunch
 import rospy
 from std_msgs.msg import UInt8
 from typing import cast
-from geometry_msgs.msg import PoseArray, Pose
+from geometry_msgs.msg import Pose
 from nav_msgs.msg import Path
 
 
