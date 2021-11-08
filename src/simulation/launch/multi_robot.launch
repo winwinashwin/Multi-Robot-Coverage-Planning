@@ -1,5 +1,5 @@
 <launch>
-    <arg name="map" default="simple"/>
+    <arg name="map" default="map1_small"/>
 
     <!--    Gazebo world-->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">

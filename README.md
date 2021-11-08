@@ -38,7 +38,8 @@ NOTE: **Make sure to unpause physics!**
 ### Multi-Robot SLAM
 
 ```bash
-# todo(ashwin)
+roslaunch simulation multi_robot_slam.launch map:=office
+roslaunch cooperative_mapping cooperative_mapping.launch
 ```
 
 ## Workflow![](./media/img/pin.svg)

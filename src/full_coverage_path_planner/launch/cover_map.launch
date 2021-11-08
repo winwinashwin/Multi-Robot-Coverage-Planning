@@ -1,5 +1,5 @@
 <launch>
-    <arg name="map" default="simple"/>
+    <arg name="map" default="map1_small"/>
 
     <!--    Publish map-->
     <node pkg="map_server" name="map_server" type="map_server"

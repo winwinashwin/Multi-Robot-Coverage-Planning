@@ -90,10 +90,6 @@
             <heading_deg>0</heading_deg>
         </spherical_coordinates>
         <state world_name='default'>
-            <sim_time>8278 877000000</sim_time>
-            <real_time>2388 716007937</real_time>
-            <wall_time>1483584500 175380351</wall_time>
-            <iterations>2177055</iterations>
             <model name='book_1'>
                 <pose frame=''>4.53796 -3.57288 0.95783 3.13964 -1.15052 1.57019</pose>
                 <scale>1 1 1</scale>
@@ -3274,26 +3270,26 @@
             <model name='Floor'>
                 <link name='main'>
                     <pose frame=''>0.795 0.05 0.01 0 -0 0</pose>
-                    <collision name='main_Collision'>
-                        <geometry>
-                            <box>
-                                <size>10 10 0.01</size>
-                            </box>
-                        </geometry>
-                        <max_contacts>10</max_contacts>
-                        <surface>
-                            <contact>
-                                <ode/>
-                            </contact>
-                            <bounce/>
-                            <friction>
-                                <torsional>
-                                    <ode/>
-                                </torsional>
-                                <ode/>
-                            </friction>
-                        </surface>
-                    </collision>
+<!--                    <collision name='main_Collision'>-->
+<!--                        <geometry>-->
+<!--                            <box>-->
+<!--                                <size>10 10 0.01</size>-->
+<!--                            </box>-->
+<!--                        </geometry>-->
+<!--                        <max_contacts>10</max_contacts>-->
+<!--                        <surface>-->
+<!--                            <contact>-->
+<!--                                <ode/>-->
+<!--                            </contact>-->
+<!--                            <bounce/>-->
+<!--                            <friction>-->
+<!--                                <torsional>-->
+<!--                                    <ode/>-->
+<!--                                </torsional>-->
+<!--                                <ode/>-->
+<!--                            </friction>-->
+<!--                        </surface>-->
+<!--                    </collision>-->
                     <visual name='main_Visual'>
                         <geometry>
                             <box>
