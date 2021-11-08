@@ -22,11 +22,9 @@
     <exec_depend>gazebo_ros</exec_depend>
     <exec_depend>robot_state_publisher</exec_depend>
     <exec_depend>xacro</exec_depend>
-    <exec_depend>turtlebot3_gazebo</exec_depend>
     <exec_depend>bringup</exec_depend>
     <exec_depend>multirobot_map_merge</exec_depend>
     <exec_depend>turtlebot3_description</exec_depend>
-
     <exec_depend>rospy</exec_depend>
     <exec_depend>std_msgs</exec_depend>
     <exec_depend>geometry_msgs</exec_depend>
