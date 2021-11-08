@@ -16,10 +16,21 @@ Developed and Tested on **ROS Noetic + Ubuntu 20.04 + Gazebo 11**
 * Coverage path planner based on Boustrophedon Cellular Decomposition
 * PID path tracking
 
-## Resolving Dependencies![](./media/img/pin.svg)
+## Build![](./media/img/pin.svg)
 
+* Resolve dependencies using `rosdep`
 ```bash
 sudo rosdep install -i -y --from-paths ./src 
+```
+
+* Build packages
+```bash
+catkin_make --cmake-args -DCMAKE_BUILD_TYPE=Release
+```
+
+* Run tests (optional)
+```bash
+catkin_make run_tests && catkin_test_results build/test_results
 ```
 
 ## Usage![](./media/img/pin.svg)
