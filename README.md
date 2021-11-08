@@ -43,6 +43,31 @@ NOTE: **Make sure to unpause physics!**
 
 ## Workflow![](./media/img/pin.svg)
 
+Intended use of the software is as shown.
+
+![](./media/img/workflow.png)
+
+### Coverage Path Planning
+
+Coverage path is computed using Boustrophedon Cellular Decomposition. The plan is then divided into equal sub-plans and 
+assigned to each agent
+
+Here is a demo of the path planning algorithm in action, ran on the occupancy grid generated using Multi-Robot SLAM on a
+complex office setting
+
+<tr>
+<td>
+
+![](./media/img/World-Office.jpg)
+
+</td>
+<td>
+
+![](./media/img/Coverage-Plan-Office.png)
+
+</td>
+</tr>
+
 ## Citation![](./media/img/pin.svg)
 
 ```bibtex
