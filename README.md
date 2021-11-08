@@ -1,41 +1,30 @@
 # Multi-Robot Coverage Planning
 
-> Software stack for cooperative multi-robot coverage for cleaning robots.
-
-<!-- markdownlint-disable -->
-
-## Project Status[![](./media/img/pin.svg)](#project-status)
-
-<table class="no-border">
-  <tr>
-    <td><img src="https://github.com/nocoinman/MRCP/actions/workflows/ros-ci.yaml/badge.svg" alt="ROS CI"/></td>
-    <td><img src="https://github.com/nocoinman/MRCP/actions/workflows/lint.yaml/badge.svg" alt="Lint"/></td>
-  </tr>
-    <tr>
-    <td><img src="https://img.shields.io/badge/ros-Noetic-%230A0FF9.svg?style=for-the-badge&logo=ros&logoColor=white"/></td>
-</tr>
-</table>
+> Software stack for Cooperative Multi-Robot Coverage for Cleaning Robots.
 
 **Developed for : AIITRA Robotics Challenge 2021**
 
-## Description[![](./media/img/pin.svg)](#project-status)
+[![ros-ci](https://github.com/nocoinman/MRCP/actions/workflows/ros-ci.yaml/badge.svg)](https://github.com/nocoinman/MRCP/actions/workflows/ros-ci.yaml)
+[![lint](https://github.com/nocoinman/MRCP/actions/workflows/lint.yaml/badge.svg)](https://github.com/nocoinman/MRCP/actions/workflows/lint.yaml)
 
-*NOTE: Gazebo physics engine in a multi-robot simulation setting is really CPU intensive.*
+Developed and Tested on **ROS Noetic + Ubuntu 20.04 + Gazebo 11**
 
-### Features
+## Features![](./media/img/pin.svg)
 
 * Solution for autonomous Multi-Robot SLAM using Frontier based exploration
 * Optimizer for finding optimal number of agents required to cover an occupancy grid
 * Coverage path planner based on Boustrophedon Cellular Decomposition
 * PID path tracking
 
-## Resolving dependencies[![](./media/img/pin.svg)](#project-status)
+## Resolving Dependencies![](./media/img/pin.svg)
 
 ```bash
 sudo rosdep install -i -y --from-paths ./src 
 ```
 
-## Usage[![](./media/img/pin.svg)](#project-status)
+## Usage![](./media/img/pin.svg)
+
+*NOTE: Gazebo physics engine in a multi-robot simulation setting is really CPU intensive.*
 
 ### Multi-Robot Coverage
 
@@ -52,7 +41,9 @@ NOTE: **Make sure to unpause physics!**
 # todo(ashwin)
 ```
 
-## Citation[![](./media/img/pin.svg)](#project-status)
+## Workflow![](./media/img/pin.svg)
+
+## Citation![](./media/img/pin.svg)
 
 ```bibtex
 @article{DBLP:journals/corr/abs-1806-03581,
