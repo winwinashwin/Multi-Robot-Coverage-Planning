@@ -62,6 +62,11 @@ complex office setting.
 
 Agents follow the designated path asynchronously. This is accomplished using simple PID control based path tracking.
 
+|![](./media/map1.gif) | ![](./media/map2.gif) |
+|:--------------------:|:---------------------:|
+|![](./media/map3.gif) | ![](./media/map4.gif) |
+
+
 ## Citation![](./media/img/pin.svg)
 
 ```bibtex
