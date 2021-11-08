@@ -1,0 +1,5 @@
+cooperative_mapping/cooperative_mapping
+/home/ashwin/catkin_ws/devel/debug/.private/cooperative_mapping/cmake.lock /home/ashwin/catkin_ws/devel/debug/./cmake.lock
+/home/ashwin/catkin_ws/devel/debug/.private/cooperative_mapping/lib/pkgconfig/cooperative_mapping.pc /home/ashwin/catkin_ws/devel/debug/lib/pkgconfig/cooperative_mapping.pc
+/home/ashwin/catkin_ws/devel/debug/.private/cooperative_mapping/share/cooperative_mapping/cmake/cooperative_mappingConfig.cmake /home/ashwin/catkin_ws/devel/debug/share/cooperative_mapping/cmake/cooperative_mappingConfig.cmake
+/home/ashwin/catkin_ws/devel/debug/.private/cooperative_mapping/share/cooperative_mapping/cmake/cooperative_mappingConfig-version.cmake /home/ashwin/catkin_ws/devel/debug/share/cooperative_mapping/cmake/cooperative_mappingConfig-version.cmake

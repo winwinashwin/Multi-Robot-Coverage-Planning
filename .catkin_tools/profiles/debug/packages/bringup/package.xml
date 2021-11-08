@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>bringup</name>
+    <version>0.0.0</version>
+    <description>The bringup package</description>
+
+    <maintainer email="ashwin5059198@gmail.com">Ashwin A Nayar</maintainer>
+
+    <license>TODO</license>
+
+    <author email="ashwin5059198@gmail.com">Ashwin A Nayar</author>
+    <author email="gauthamga.gga@gmail.com">Gautham Govind A</author>
+    <author email="harshinechooli@gmail.com">Harshin N</author>
+
+    <buildtool_depend>catkin</buildtool_depend>
+    <exec_depend>filters</exec_depend>
+    <exec_depend>slam</exec_depend>
+    <exec_depend>navigation</exec_depend>
+    <exec_depend>frontier_exploration</exec_depend>
+    <exec_depend>tracking_pid</exec_depend>
+    <exec_depend>full_coverage_path_planner</exec_depend>
+    <exec_depend>tf2_ros</exec_depend>
+
+    <test_depend>roslaunch</test_depend>
+
+    <!-- The export tag contains other, unspecified, tags -->
+    <export>
+        <!-- Other tools can request additional information be placed here -->
+
+    </export>
+</package>

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>frontier_exploration</name>
+    <version>0.0.0</version>
+
+    <description>Package for frontier exploration based on wavefront frontier detection.</description>
+
+    <maintainer email="ashwin5059198@gmail.com">Ashwin A Nayar</maintainer>
+
+    <license>TODO</license>
+
+    <author email="ashwin5059198@gmail.com">Ashwin A Nayar</author>
+    <author email="gauthamga.gga@gmail.com">Gautham Govind A</author>
+    <author email="harshinechooli@gmail.com">Harshin N</author>
+
+    <buildtool_depend>catkin</buildtool_depend>
+    <build_depend>roslint</build_depend>
+    <depend>roscpp</depend>
+    <depend>std_msgs</depend>
+    <depend>std_srvs</depend>
+    <depend>move_base_msgs</depend>
+    <depend>visualization_msgs</depend>
+    <depend>geometry_msgs</depend>
+    <depend>map_msgs</depend>
+    <depend>nav_msgs</depend>
+    <depend>actionlib_msgs</depend>
+    <depend>tf</depend>
+    <depend>costmap_2d</depend>
+    <depend>actionlib</depend>
+
+    <test_depend>roslaunch</test_depend>
+</package>

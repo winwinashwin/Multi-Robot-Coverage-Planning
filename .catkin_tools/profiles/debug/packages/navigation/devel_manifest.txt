@@ -1,0 +1,5 @@
+robot/navigation
+/home/ashwin/catkin_ws/devel/debug/.private/navigation/cmake.lock /home/ashwin/catkin_ws/devel/debug/./cmake.lock
+/home/ashwin/catkin_ws/devel/debug/.private/navigation/lib/pkgconfig/navigation.pc /home/ashwin/catkin_ws/devel/debug/lib/pkgconfig/navigation.pc
+/home/ashwin/catkin_ws/devel/debug/.private/navigation/share/navigation/cmake/navigationConfig-version.cmake /home/ashwin/catkin_ws/devel/debug/share/navigation/cmake/navigationConfig-version.cmake
+/home/ashwin/catkin_ws/devel/debug/.private/navigation/share/navigation/cmake/navigationConfig.cmake /home/ashwin/catkin_ws/devel/debug/share/navigation/cmake/navigationConfig.cmake

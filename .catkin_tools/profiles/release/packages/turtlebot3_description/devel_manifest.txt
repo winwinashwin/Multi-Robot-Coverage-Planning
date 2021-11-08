@@ -1,0 +1,5 @@
+robot/turtlebot3_description
+/home/ashwin/catkin_ws/devel/release/.private/turtlebot3_description/cmake.lock /home/ashwin/catkin_ws/devel/release/./cmake.lock
+/home/ashwin/catkin_ws/devel/release/.private/turtlebot3_description/lib/pkgconfig/turtlebot3_description.pc /home/ashwin/catkin_ws/devel/release/lib/pkgconfig/turtlebot3_description.pc
+/home/ashwin/catkin_ws/devel/release/.private/turtlebot3_description/share/turtlebot3_description/cmake/turtlebot3_descriptionConfig-version.cmake /home/ashwin/catkin_ws/devel/release/share/turtlebot3_description/cmake/turtlebot3_descriptionConfig-version.cmake
+/home/ashwin/catkin_ws/devel/release/.private/turtlebot3_description/share/turtlebot3_description/cmake/turtlebot3_descriptionConfig.cmake /home/ashwin/catkin_ws/devel/release/share/turtlebot3_description/cmake/turtlebot3_descriptionConfig.cmake

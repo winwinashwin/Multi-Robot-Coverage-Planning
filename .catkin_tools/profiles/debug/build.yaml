@@ -1,0 +1,25 @@
+authors: []
+blacklist: []
+build_space: /home/ashwin/catkin_ws/build/debug
+catkin_make_args: []
+cmake_args:
+- -DCMAKE_BUILD_TYPE=Debug
+devel_layout: linked
+devel_space: /home/ashwin/catkin_ws/devel/debug
+extend_path: null
+extends: null
+install: false
+install_space: install
+isolate_install: false
+jobs_args: []
+licenses:
+- TODO
+log_space: /home/ashwin/catkin_ws/logs/debug
+maintainers:
+- Ashwin A Nayar
+- ashwin5059198@gmail.com
+make_args: []
+source_space: src
+use_env_cache: false
+use_internal_make_jobserver: true
+whitelist: []
