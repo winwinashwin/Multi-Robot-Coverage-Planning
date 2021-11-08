@@ -1,6 +1,0 @@
-cooperative_mapping/frontier_exploration
-/home/ashwin/catkin_ws/devel/debug/.private/frontier_exploration/cmake.lock /home/ashwin/catkin_ws/devel/debug/./cmake.lock
-/home/ashwin/catkin_ws/devel/debug/.private/frontier_exploration/lib/frontier_exploration/frontier_exploration_node /home/ashwin/catkin_ws/devel/debug/lib/frontier_exploration/frontier_exploration_node
-/home/ashwin/catkin_ws/devel/debug/.private/frontier_exploration/lib/pkgconfig/frontier_exploration.pc /home/ashwin/catkin_ws/devel/debug/lib/pkgconfig/frontier_exploration.pc
-/home/ashwin/catkin_ws/devel/debug/.private/frontier_exploration/share/frontier_exploration/cmake/frontier_explorationConfig-version.cmake /home/ashwin/catkin_ws/devel/debug/share/frontier_exploration/cmake/frontier_explorationConfig-version.cmake
-/home/ashwin/catkin_ws/devel/debug/.private/frontier_exploration/share/frontier_exploration/cmake/frontier_explorationConfig.cmake /home/ashwin/catkin_ws/devel/debug/share/frontier_exploration/cmake/frontier_explorationConfig.cmake

@@ -1,5 +1,0 @@
-robot/slam
-/home/ashwin/catkin_ws/devel/debug/.private/slam/cmake.lock /home/ashwin/catkin_ws/devel/debug/./cmake.lock
-/home/ashwin/catkin_ws/devel/debug/.private/slam/lib/pkgconfig/slam.pc /home/ashwin/catkin_ws/devel/debug/lib/pkgconfig/slam.pc
-/home/ashwin/catkin_ws/devel/debug/.private/slam/share/slam/cmake/slamConfig-version.cmake /home/ashwin/catkin_ws/devel/debug/share/slam/cmake/slamConfig-version.cmake
-/home/ashwin/catkin_ws/devel/debug/.private/slam/share/slam/cmake/slamConfig.cmake /home/ashwin/catkin_ws/devel/debug/share/slam/cmake/slamConfig.cmake

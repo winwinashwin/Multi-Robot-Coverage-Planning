@@ -1,8 +1,0 @@
-simulation
-/home/ashwin/catkin_ws/devel/release/.private/simulation/cmake.lock /home/ashwin/catkin_ws/devel/release/./cmake.lock
-/home/ashwin/catkin_ws/devel/release/.private/simulation/lib/libgazebo_2Dmap_plugin.so /home/ashwin/catkin_ws/devel/release/lib/libgazebo_2Dmap_plugin.so
-/home/ashwin/catkin_ws/devel/release/.private/simulation/lib/simulation/multi_robot_spawner.py /home/ashwin/catkin_ws/devel/release/lib/simulation/multi_robot_spawner.py
-/home/ashwin/catkin_ws/devel/release/.private/simulation/lib/simulation/cmake.lock /home/ashwin/catkin_ws/devel/release/lib/simulation/cmake.lock
-/home/ashwin/catkin_ws/devel/release/.private/simulation/lib/pkgconfig/simulation.pc /home/ashwin/catkin_ws/devel/release/lib/pkgconfig/simulation.pc
-/home/ashwin/catkin_ws/devel/release/.private/simulation/share/simulation/cmake/simulationConfig.cmake /home/ashwin/catkin_ws/devel/release/share/simulation/cmake/simulationConfig.cmake
-/home/ashwin/catkin_ws/devel/release/.private/simulation/share/simulation/cmake/simulationConfig-version.cmake /home/ashwin/catkin_ws/devel/release/share/simulation/cmake/simulationConfig-version.cmake

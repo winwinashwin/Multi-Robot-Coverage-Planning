@@ -1,5 +1,0 @@
-robot/bringup
-/home/ashwin/catkin_ws/devel/debug/.private/bringup/cmake.lock /home/ashwin/catkin_ws/devel/debug/./cmake.lock
-/home/ashwin/catkin_ws/devel/debug/.private/bringup/lib/pkgconfig/bringup.pc /home/ashwin/catkin_ws/devel/debug/lib/pkgconfig/bringup.pc
-/home/ashwin/catkin_ws/devel/debug/.private/bringup/share/bringup/cmake/bringupConfig-version.cmake /home/ashwin/catkin_ws/devel/debug/share/bringup/cmake/bringupConfig-version.cmake
-/home/ashwin/catkin_ws/devel/debug/.private/bringup/share/bringup/cmake/bringupConfig.cmake /home/ashwin/catkin_ws/devel/debug/share/bringup/cmake/bringupConfig.cmake

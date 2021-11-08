@@ -2,6 +2,7 @@ build/*
 devel/*
 install/*
 logs/*
+.catkin_tools
 .catkin_workspace
 src/CMakeLists.txt
 cmake-build-*
