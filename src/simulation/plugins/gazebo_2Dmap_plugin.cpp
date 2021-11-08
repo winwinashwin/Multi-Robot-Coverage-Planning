@@ -18,6 +18,11 @@
  * limitations under the License.
  */
 
+/**
+ * Adapted from: https://github.com/marinaKollmitz/gazebo_ros_2Dmap_plugin
+ * With very minor changes
+ */
+
 #include "simulation/gazebo_2Dmap_plugin.h"
 
 #include <gazebo/common/CommonTypes.hh>

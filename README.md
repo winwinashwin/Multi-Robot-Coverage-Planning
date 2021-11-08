@@ -1,17 +1,24 @@
 # Multi-Robot Coverage Planning
 
-[![ros-ci](https://github.com/nocoinman/MRCP/actions/workflows/ros-ci.yaml/badge.svg)](https://github.com/nocoinman/MRCP/actions/workflows/ros-ci.yaml)
-[![lint](https://github.com/nocoinman/MRCP/actions/workflows/lint.yaml/badge.svg)](https://github.com/nocoinman/MRCP/actions/workflows/lint.yaml)
+> Software stack for cooperative multi-robot coverage for cleaning robots.
 
-**Developed by  : Team Curious Comrades**
+<!-- markdownlint-disable -->
+
+## Project Status[![](./media/img/pin.svg)](#project-status)
+
+<table class="no-border">
+  <tr>
+    <td><img src="https://github.com/nocoinman/MRCP/actions/workflows/ros-ci.yaml/badge.svg" alt="ROS CI"/></td>
+    <td><img src="https://github.com/nocoinman/MRCP/actions/workflows/lint.yaml/badge.svg" alt="Lint"/></td>
+  </tr>
+    <tr>
+    <td><img src="https://img.shields.io/badge/ros-Noetic-%230A0FF9.svg?style=for-the-badge&logo=ros&logoColor=white"/></td>
+</tr>
+</table>
 
 **Developed for : AIITRA Robotics Challenge 2021**
 
-Tested on: ROS Noetic + Gazebo 11 + Ubuntu 20.04 LTS
-
-## Description
-
-Software stack for cooperative multi-robot coverage.
+## Description[![](./media/img/pin.svg)](#project-status)
 
 *NOTE: Gazebo physics engine in a multi-robot simulation setting is really CPU intensive.*
 
@@ -20,15 +27,15 @@ Software stack for cooperative multi-robot coverage.
 * Solution for autonomous Multi-Robot SLAM using Frontier based exploration
 * Optimizer for finding optimal number of agents required to cover an occupancy grid
 * Coverage path planner based on Boustrophedon Cellular Decomposition
-* PID path tracking 
+* PID path tracking
 
-## Resolving dependencies
+## Resolving dependencies[![](./media/img/pin.svg)](#project-status)
 
 ```bash
 sudo rosdep install -i -y --from-paths ./src 
 ```
 
-## Usage
+## Usage[![](./media/img/pin.svg)](#project-status)
 
 ### Multi-Robot Coverage
 
@@ -36,6 +43,7 @@ sudo rosdep install -i -y --from-paths ./src
 roslaunch simulation multi_robot.launch map:=map2_small
 roslaunch full_coverage_path_planner cover_map.launch map:=map2_small
 ```
+
 NOTE: **Make sure to unpause physics!**
 
 ### Multi-Robot SLAM
@@ -44,9 +52,9 @@ NOTE: **Make sure to unpause physics!**
 # todo(ashwin)
 ```
 
-## Reference
+## Citation[![](./media/img/pin.svg)](#project-status)
 
-```
+```bibtex
 @article{DBLP:journals/corr/abs-1806-03581,
   author    = {Anirudh Topiwala and
                Pranav Inani and
