@@ -1,0 +1,43 @@
+version: '2.3'
+
+services:
+  master:
+    build:
+      context: .
+      target: prod_stage
+    image: mrcp
+    command: roscore
+    networks:
+      - isolated
+    ports:
+      - 11311:11311
+
+  simulation:
+    image: mrcp
+    command: roslaunch simulation multi_robot.launch map:=map1_small
+    runtime: nvidia
+    tty: true
+    environment:
+      DISPLAY: ${DISPLAY}
+      QT_X11_NO_MITSHM: 1
+      XAUTHORITY: /tmp/.docker.xauth
+      ROS_MASTER_URI: http://master:11311
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /tmp/.docker.xauth:/tmp/.docker.xauth:rw
+    networks:
+      - isolated
+    depends_on:
+      - master
+
+  multi_robot_coverage:
+    image: mrcp
+    command: roslaunch full_coverage_path_planner cover_map.launch map:=map1_small
+    environment:
+      ROS_MASTER_URI: http://master:11311
+    networks:
+      - isolated
+
+networks:
+  isolated:
+    driver: bridge

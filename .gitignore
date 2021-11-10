@@ -1,7 +1,7 @@
-build/*
-devel/*
-install/*
-logs/*
+build
+devel
+install
+log
 .catkin_tools
 .catkin_workspace
 src/CMakeLists.txt
@@ -9,4 +9,5 @@ cmake-build-*
 frames.pdf
 frames.gv
 
-.idea/*
+.idea
+compile_commands.json

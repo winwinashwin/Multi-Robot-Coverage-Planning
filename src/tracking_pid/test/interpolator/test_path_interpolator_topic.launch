@@ -7,7 +7,7 @@
         <param name="loop" value="-1"/>
     </node>
 
-    <node pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 earth map 100" name="map_tfpub"/>
+    <node pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 odom map 100" name="map_tfpub"/>
 
     <node name="publish_path" pkg="rostopic" type="rostopic" args="pub --latch /path nav_msgs/Path --file=$(find tracking_pid)/trajectories/coverage_map.yaml"/>
 
