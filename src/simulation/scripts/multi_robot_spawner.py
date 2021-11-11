@@ -28,16 +28,23 @@ for robot_id in range(n_agents):
     path_topic = f"{robot_namespace}_{robot_id}/waypoints"
     path = cast(Path, rospy.wait_for_message(path_topic, Path))
     first = path.poses[0].pose  # type: Pose
-    second = path.poses[1].pose  # type: Pose
+    # Not using poses[1] because the points maybe so close and orientation won't be accurate. 15 was found to be a good
+    # number from trial and error. This might change with the up-sampling parameter value during path computation.
+    second = path.poses[15].pose  # type: Pose
 
+    x1, y1 = first.position.x, first.position.y
+    x2, y2 = second.position.x, second.position.y
+    yaw = atan2(y2-y1, x2-x1)
     cli_args = [
         pkg,
         src,
         f"id:={robot_id}",
-        f"x_pos:={first.position.x}",
-        f"y_pos:={first.position.y}",
-        f"yaw:={atan2(second.position.y-first.position.y,second.position.x-first.position.x)}",
+        f"x_pos:={x1}",
+        f"y_pos:={y1}",
+        f"yaw:={yaw}",
     ]
+    rospy.loginfo(f'Spawning {robot_id} with x={x1}, y={y1}, yaw={yaw}')
+    rospy.loginfo(f'{(x1, y1)}, {(x2, y2)}')
     roslaunch_file = roslaunch.rlutil.resolve_launch_arguments(cli_args)[0]
     roslaunch_args = cli_args[2:]
     launch_files.append((roslaunch_file, roslaunch_args))

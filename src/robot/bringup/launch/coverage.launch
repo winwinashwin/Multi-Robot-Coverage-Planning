@@ -55,7 +55,7 @@
         </group>
 
         <node name="interpolator" pkg="tracking_pid" type="path_interpolator">
-            <param name="target_x_vel" value="0.3"/>
+            <param name="target_x_vel" value="0.25"/>
             <param name="target_yaw_vel" value="0.5"/>
             <remap from="path" to="waypoints"/>
         </node>

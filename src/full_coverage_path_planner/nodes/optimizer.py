@@ -41,6 +41,7 @@ class BaseOptimizer(object):
 
         rospy.loginfo(f"Solved. N_AGENTS: {n_agents}")
         return n_agents
+        # return 1
 
 
 class OptimizerFromImage(BaseOptimizer):
