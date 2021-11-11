@@ -34,7 +34,7 @@ for robot_id in range(n_agents):
 
     x1, y1 = first.position.x, first.position.y
     x2, y2 = second.position.x, second.position.y
-    yaw = atan2(y2-y1, x2-x1)
+    yaw = atan2(y2 - y1, x2 - x1)
     cli_args = [
         pkg,
         src,
@@ -43,8 +43,8 @@ for robot_id in range(n_agents):
         f"y_pos:={y1}",
         f"yaw:={yaw}",
     ]
-    rospy.loginfo(f'Spawning {robot_id} with x={x1}, y={y1}, yaw={yaw}')
-    rospy.loginfo(f'{(x1, y1)}, {(x2, y2)}')
+    rospy.loginfo(f"Spawning {robot_id} with x={x1}, y={y1}, yaw={yaw}")
+    rospy.loginfo(f"{(x1, y1)}, {(x2, y2)}")
     roslaunch_file = roslaunch.rlutil.resolve_launch_arguments(cli_args)[0]
     roslaunch_args = cli_args[2:]
     launch_files.append((roslaunch_file, roslaunch_args))
