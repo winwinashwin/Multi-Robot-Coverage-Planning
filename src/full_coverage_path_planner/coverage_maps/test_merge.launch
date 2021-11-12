@@ -1,0 +1,30 @@
+<launch>
+    <group ns="robot_0">
+        <node pkg="map_server" name="map_server" type="map_server"
+              args="$(find full_coverage_path_planner)/coverage_maps/cov0.yaml"
+              respawn="true" clear_params="true" output="screen"/>
+    </group>
+    <group ns="robot_1">
+        <node pkg="map_server" name="map_server" type="map_server"
+              args="$(find full_coverage_path_planner)/coverage_maps/cov1.yaml"
+              respawn="true" clear_params="true" output="screen"/>
+    </group>
+    <group ns="robot_2">
+        <node pkg="map_server" name="map_server" type="map_server"
+              args="$(find full_coverage_path_planner)/coverage_maps/cov2.yaml"
+              respawn="true" clear_params="true" output="screen"/>
+    </group>
+    <group ns="robot_3">
+        <node pkg="map_server" name="map_server" type="map_server"
+              args="$(find full_coverage_path_planner)/coverage_maps/cov3.yaml"
+              respawn="true" clear_params="true" output="screen"/>
+    </group>
+
+    <group>
+        <node pkg="map_server" name="map_server" type="map_server"
+              args="$(find full_coverage_path_planner)/maps/map4_small.yaml"
+              respawn="true" clear_params="true" output="screen"/>
+    </group>
+
+    <node pkg="full_coverage_path_planner" name="merge" type="merge.py" output="screen"/>
+</launch>

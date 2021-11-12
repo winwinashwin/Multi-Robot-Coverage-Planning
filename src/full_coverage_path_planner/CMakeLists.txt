@@ -74,10 +74,11 @@ catkin_install_python(
         nodes/coverage_progress_visualizer.py
         nodes/optimizer.py
         nodes/multi_robot_bringup.py
+        coverage_maps/merge.py
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-install(DIRECTORY config launch maps rviz
+install(DIRECTORY config launch maps rviz coverage_maps
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
         )
 
