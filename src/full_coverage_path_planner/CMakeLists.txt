@@ -7,7 +7,6 @@ find_package(catkin REQUIRED COMPONENTS
         costmap_2d
         nav_core
         geometry_msgs
-        rviz_visual_tools
         pluginlib
         roscpp
         roslint
@@ -27,7 +26,6 @@ catkin_package(
         CATKIN_DEPENDS
         base_local_planner
         geometry_msgs
-        rviz_visual_tools
         tf2
         tf
         costmap_2d

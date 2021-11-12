@@ -1,6 +1,5 @@
 #include "full_coverage_path_planner/boustrophedon_stc.h"
 
-#include <algorithm>
 #include <geometry_msgs/PoseStamped.h>
 #include <list>
 #include <nav_msgs/OccupancyGrid.h>
@@ -10,12 +9,6 @@
 #include <string>
 #include <tf2/LinearMath/Quaternion.h>
 #include <vector>
-
-#define VISUALIZE_PATH 1
-
-#if VISUALIZE_PATH
-#include <rviz_visual_tools/rviz_visual_tools.h>
-#endif
 
 using PoseStamped = geometry_msgs::PoseStamped;
 
@@ -74,22 +67,17 @@ int main(int argc, char** argv)
     std::list<Point_t> path = full_coverage_path_planner::BoustrophedonSTC::boustrophedon_stc(
         grid, scaled, multiple_pass_counter, visited_counter);
 
-    // path now has the indices of corner points in the path, we now convert that to real world coordinates
+    // path has the indices of corner points in the path, we now convert that to real world coordinates
     std::vector<PoseStamped> plan;
+    plan.reserve(path.size());
     planner.parsePointlist2Plan(pose, path, plan);
 
-    rviz_visual_tools::RvizVisualToolsPtr visual_tools_;
-    visual_tools_.reset(new rviz_visual_tools::RvizVisualTools("map", "/rviz_visual_markers"));
-
-#if VISUALIZE_PATH
-    std::vector<geometry_msgs::Point> guiPath;
-    guiPath.reserve(plan.size());
-    std::for_each(plan.begin(), plan.end(),
-                  [&guiPath](geometry_msgs::PoseStamped& pose) { guiPath.push_back(pose.pose.position); });
-    visual_tools_->loadMarkerPub(false, true);
-    visual_tools_->publishPath(guiPath, rviz_visual_tools::BLUE, 0.02);
-    visual_tools_->trigger();
-#endif
+    auto planPub = nh.advertise<nav_msgs::Path>("boustrophedon/path", 10, true);
+    auto pathMsg = nav_msgs::Path();
+    pathMsg.header.frame_id = "map";
+    pathMsg.header.stamp = ros::Time::now();
+    pathMsg.poses = plan;
+    planPub.publish(pathMsg);
 
     // Inorder to divide the path among agents, we need more points in between the corner points of the path.
     // We just perform a linear parametric up-sampling
