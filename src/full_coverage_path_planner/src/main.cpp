@@ -1,5 +1,6 @@
 #include "full_coverage_path_planner/boustrophedon_stc.h"
 
+#include <algorithm>
 #include <geometry_msgs/PoseStamped.h>
 #include <list>
 #include <nav_msgs/OccupancyGrid.h>
