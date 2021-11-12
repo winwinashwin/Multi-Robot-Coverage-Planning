@@ -71,10 +71,10 @@ install(FILES fcpp_plugin.xml
 
 catkin_install_python(
         PROGRAMS
-        nodes/coverage_progress_visualizer.py
-        nodes/optimizer.py
-        nodes/multi_robot_bringup.py
-        nodes/map_merge.py
+        scripts/coverage_progress_visualizer.py
+        scripts/optimizer.py
+        scripts/multi_robot_bringup.py
+        scripts/map_merge.py
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
