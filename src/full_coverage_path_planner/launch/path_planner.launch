@@ -1,6 +1,6 @@
 <launch>
     <node pkg="full_coverage_path_planner" name="path_planner" type="path_planner" clear_params="true" output="screen">
-        <param name="robot_radius" value="0.2"/>
+        <param name="robot_radius" value="0.25"/>
 <!--            Path planning will start from here. Input: x, y, z, roll, pitch, yaw (in map frame)-->
                 <param name="start_pose" value="4 4 0 0 0 0"/>
 <!--                <param name="start_pose" value="0 0 0 0 0 0"/>-->
