@@ -56,7 +56,7 @@ def main():
     parent.spin()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     try:
         main()
     except rospy.ROSInterruptException:

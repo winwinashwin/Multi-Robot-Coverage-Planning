@@ -25,34 +25,15 @@
                 This corrected IMU messages are the ones that are passed to the EKF node for state estimation.
         -->
 
-        <node pkg="filters" type="imu_frame_id_correction.py" name="imu_frame_id_correction" output="screen"
-              clear_params="true">
-            <remap from="imu_in" to="imu"/>
-            <remap from="imu_out" to="imu/frame_id_corrected"/>
-        </node>
+        <!--    Use this only if using EKF-->
+        <!--        <node pkg="filters" type="imu_frame_id_correction.py" name="imu_frame_id_correction" output="screen"-->
+        <!--              clear_params="true">-->
+        <!--            <remap from="imu_in" to="imu"/>-->
+        <!--            <remap from="imu_out" to="imu/frame_id_corrected"/>-->
+        <!--        </node>-->
 
-        <!--    Localization -->
-        <group>
-<!--            <include file="$(find navigation)/launch/amcl.launch">-->
-<!--                <arg name="odom_frame" value="$(arg uid)/odom"/>-->
-<!--                <arg name="base_frame" value="$(arg uid)/base_footprint"/>-->
-<!--                <arg name="initial_pose_x" value="$(arg x_pos)"/>-->
-<!--                <arg name="initial_pose_y" value="$(arg y_pos)"/>-->
-<!--                <arg name="initial_pose_a" value="$(arg yaw)"/>-->
-<!--            </include>-->
-
-            <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_odom_tf_broadcaster"
-                  args="0 0 0 0 0 0 map $(arg uid)/odom"/>
-
-            <group ns="map_merge">
-                <param name="init_pose_x" value="$(arg x_pos)"/>
-                <param name="init_pose_y" value="$(arg y_pos)"/>
-                <param name="init_pose_z" value="0.0"/>
-                <!--    Don't place value of arg `yaw` here, for some reason this seems to mess up
-                map merging -->
-                <param name="init_pose_yaw" value="0.0"/>
-            </group>
-        </group>
+        <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_odom_tf_broadcaster"
+              args="0 0 0 0 0 0 map $(arg uid)/odom"/>
 
         <node name="interpolator" pkg="tracking_pid" type="path_interpolator">
             <param name="target_x_vel" value="0.25"/>
@@ -76,13 +57,6 @@
             <param name="Kp_lat" value="4.0"/>
             <param name="Kd_lat" value="0.3"/>
         </node>
-
-        <!--    Move Base -->
-<!--        <include file="$(find navigation)/launch/move_base_coverage.launch">-->
-<!--            <arg name="robot_base_frame" value="$(arg uid)/base_footprint"/>-->
-<!--            <arg name="odom_frame" value="$(arg uid)/odom"/>-->
-<!--            <arg name="scan_frame" value="$(arg uid)/base_scan"/>-->
-<!--        </include>-->
 
         <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_$(arg uid)_cov_map_tf_broadcaster"
               args="0 0 0 0 0 0 map $(arg uid)/coverage_grid"/>
