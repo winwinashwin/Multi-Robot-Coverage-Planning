@@ -25,11 +25,12 @@
                 This corrected IMU messages are the ones that are passed to the EKF node for state estimation.
         -->
 
-        <node pkg="filters" type="imu_frame_id_correction.py" name="imu_frame_id_correction" output="screen"
-              clear_params="true">
-            <remap from="imu_in" to="imu"/>
-            <remap from="imu_out" to="imu/frame_id_corrected"/>
-        </node>
+        <!--    Use this only if using EKF-->
+        <!--        <node pkg="filters" type="imu_frame_id_correction.py" name="imu_frame_id_correction" output="screen"-->
+        <!--              clear_params="true">-->
+        <!--            <remap from="imu_in" to="imu"/>-->
+        <!--            <remap from="imu_out" to="imu/frame_id_corrected"/>-->
+        <!--        </node>-->
 
         <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_odom_tf_broadcaster"
               args="0 0 0 0 0 0 map $(arg uid)/odom"/>
