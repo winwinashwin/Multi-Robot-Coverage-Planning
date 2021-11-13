@@ -16,7 +16,7 @@ import numpy as np
 import rospy
 from nav_msgs.msg import OccupancyGrid
 import message_filters
-from std_msgs.msg import UInt8
+from std_msgs.msg import UInt8, Float64
 from typing import cast
 
 
@@ -50,6 +50,9 @@ class MultiMapMergerNode:
         self._merged_pub = rospy.Publisher(
             self._merged_map_topic, OccupancyGrid, queue_size=10
         )
+        self._cov_progress_pub = rospy.Publisher(
+            "coverage_progress", Float64, queue_size=10
+        )
 
     def merge_callback(self, *grids):
         size = grids[0].info.width * grids[0].info.height
@@ -64,7 +67,11 @@ class MultiMapMergerNode:
         msg.header.stamp = rospy.Time().now()
         msg.info = grids[0].info
         msg.data = merged.tolist()
+
+        counts = dict(zip(*np.unique(merged, return_counts=True)))
+        progress = 100 * counts[75] / (counts[75] + counts[0])
         self._merged_pub.publish(msg)
+        self._cov_progress_pub.publish(progress)
 
 
 def main():

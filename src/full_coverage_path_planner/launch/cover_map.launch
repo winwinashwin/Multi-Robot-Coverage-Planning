@@ -19,7 +19,8 @@
         <param name="robot_namespace" value="robot"/>
     </node>
 
-    <node pkg="full_coverage_path_planner" type="map_merge.py" respawn="false" name="map_merge" clear_params="true">
+    <node pkg="full_coverage_path_planner" type="map_merge.py" respawn="false" name="map_merge" clear_params="true"
+          output="screen">
         <param name="robot_map_topic" value="coverage_grid"/>
         <param name="robot_namespace" value="robot"/>
         <param name="merged_map_topic" value="coverage_grid_merged"/>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>topics_rviz_plugin</name>
+  <version>0.1.0</version>
+  <description>Display topics values in a RViz plugin</description>
+
+  <author>Victor Lamoine - Institut Maupertuis</author>
+  <maintainer email="victor.lamoine@gmail.com">Victor Lamoine</maintainer>
+  <license>BSD-3-Clause-Attribution</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>class_loader</depend>
+  <depend>roscpp</depend>
+  <depend>qtbase5-dev</depend>
+  <depend>rqt_gui</depend>
+  <depend>rviz</depend>
+
+   <export>
+    <rviz plugin="${prefix}/plugin.xml"/>
+  </export>
+</package>
+
