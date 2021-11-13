@@ -24,6 +24,9 @@
 #include <QTableWidget>
 #include <QVBoxLayout>
 #include <QtGlobal>
+#include <map>
+#include <string>
+#include <vector>
 
 namespace topics_rviz_plugin
 {
@@ -33,7 +36,7 @@ class DisplayTopics : public rviz::Panel
     Q_OBJECT
 
 public:
-    DisplayTopics(QWidget* parent = NULL);
+    explicit DisplayTopics(QWidget* parent = NULL);
     virtual ~DisplayTopics();
 
     struct TopicDetails
@@ -69,4 +72,4 @@ protected:
 
 }  // namespace topics_rviz_plugin
 
-#endif
+#endif  // TOPICS_RVIZ_PLUGIN_DISPLAY_TOPICS_HPP

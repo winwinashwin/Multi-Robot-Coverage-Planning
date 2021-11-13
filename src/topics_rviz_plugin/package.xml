@@ -12,6 +12,7 @@
 
   <depend>class_loader</depend>
   <depend>roscpp</depend>
+  <depend>roslint</depend>
   <depend>qtbase5-dev</depend>
   <depend>rqt_gui</depend>
   <depend>rviz</depend>

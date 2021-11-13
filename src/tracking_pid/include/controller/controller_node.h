@@ -49,8 +49,8 @@ tracking_pid::traj_point goalPoint;
 tf::Vector3 newOrigin;
 
 // Frame names
-std::string map_frame;
-std::string base_link_frame;
+std::string map_frame;        // NOLINT
+std::string base_link_frame;  // NOLINT
 
 // Errors
 double error_x = 0;
@@ -160,7 +160,8 @@ visualization_msgs::Marker mkCurPose, mkControlPose, mkGoalPose;
 geometry_msgs::Point p;
 
 // For Screen output
-std::string topic_from_controller, topic_from_plant, setpoint_topic, pid_enable_topic, node_name = "pid_node";
+std::string topic_from_controller, topic_from_plant, setpoint_topic, pid_enable_topic;  // NOLINT
+std::string node_name = "pid_node";                                                     // NOLINT
 
 // Diagnostic objects
 double min_loop_frequency = 1, max_loop_frequency = 1000;

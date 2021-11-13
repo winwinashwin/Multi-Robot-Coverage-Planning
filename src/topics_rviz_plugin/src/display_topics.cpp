@@ -1,4 +1,10 @@
+#include <algorithm>
+#include <map>
+#include <memory>
+#include <string>
 #include <topics_rviz_plugin/display_topics.hpp>
+#include <utility>
+#include <vector>
 
 namespace topics_rviz_plugin
 {
@@ -74,7 +80,7 @@ void DisplayTopics::load(const rviz::Config& config)
 
         TopicDetails details;
         details.type = topic_type.toStdString();
-        details.refresh_rate = ros::Duration(((double)refresh_rate_ms) / 1e3);
+        details.refresh_rate = ros::Duration(static_cast<double>(refresh_rate_ms) / 1e3);
 
         displayed_topics_.insert(std::pair<std::string, TopicDetails>(topic_name.toStdString(), details));
         ++i;
@@ -330,7 +336,7 @@ void DisplayTopics::settings()
             if (topic.first != spinbox->objectName().toStdString())
                 continue;
 
-            const ros::Duration d(((double)spinbox->value()) / 1e3);  // milliseconds to seconds
+            const ros::Duration d(static_cast<double>(spinbox->value()) / 1e3);  // milliseconds to seconds
             topic.second.refresh_rate = d;
             break;
         }

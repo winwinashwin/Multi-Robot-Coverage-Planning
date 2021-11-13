@@ -6,26 +6,25 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS
-  class_loader
-  roscpp
-  rqt_gui
-  rviz
-)
+        class_loader
+        roscpp
+        roslint
+        rqt_gui
+        rviz
+        )
 
 ## Find Qt5
 set(CMAKE_AUTOMOC ON)
 find_package(Qt5Widgets REQUIRED)
 
-set(
-  PROJECT_QT_PANELS_TARGETS
-  ${PROJECT_NAME}_display_topics
-)
+set(PROJECT_QT_PANELS_TARGETS
+        ${PROJECT_NAME}_display_topics
+        )
 
-set(
-  PROJECT_TARGETS
-  ${PROJECT_QT_PANELS_TARGETS}
-  ${PROJECT_NAME}_topic_info
-)
+set(PROJECT_TARGETS
+        ${PROJECT_QT_PANELS_TARGETS}
+        ${PROJECT_NAME}_topic_info
+        )
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -40,62 +39,62 @@ set(
 ###################################
 
 catkin_package(
-  INCLUDE_DIRS
-  include
-  LIBRARIES
-  ${PROJECT_TARGETS}
-  CATKIN_DEPENDS
-  roscpp
-  rqt_gui
-  rviz
+        INCLUDE_DIRS
+        include
+        LIBRARIES
+        ${PROJECT_TARGETS}
+        CATKIN_DEPENDS
+        roscpp
+        roslint
+        rqt_gui
+        rviz
 )
+roslint_cpp()
 
 ###########
 ## Build ##
 ###########
 
 include_directories(
-  include
-  ${catkin_INCLUDE_DIRS}
+        include
+        ${catkin_INCLUDE_DIRS}
 )
 
 # TopicInfo class / library
 add_library(
-  ${PROJECT_NAME}_topic_info
-  include/${PROJECT_NAME}/topic_info.hpp
-  src/topic_info.cpp
+        ${PROJECT_NAME}_topic_info
+        include/${PROJECT_NAME}/topic_info.hpp
+        src/topic_info.cpp
 )
 target_link_libraries(
-  ${PROJECT_NAME}_topic_info
-  Qt5::Widgets
-  ${catkin_LIBRARIES}
+        ${PROJECT_NAME}_topic_info
+        Qt5::Widgets
+        ${catkin_LIBRARIES}
 )
 add_dependencies(
-  ${PROJECT_NAME}_topic_info
-  ${catkin_EXPORTED_TARGETS}
+        ${PROJECT_NAME}_topic_info
+        ${catkin_EXPORTED_TARGETS}
 )
 
 # Qt panel - Display topics
 add_library(
-  ${PROJECT_NAME}_display_topics
-  include/${PROJECT_NAME}/display_topics.hpp
-  src/display_topics.cpp
+        ${PROJECT_NAME}_display_topics
+        include/${PROJECT_NAME}/display_topics.hpp
+        src/display_topics.cpp
 )
 target_link_libraries(
-  ${PROJECT_NAME}_display_topics
-  ${PROJECT_NAME}_topic_info
-  Qt5::Widgets
-  ${catkin_LIBRARIES}
+        ${PROJECT_NAME}_display_topics
+        ${PROJECT_NAME}_topic_info
+        Qt5::Widgets
+        ${catkin_LIBRARIES}
 )
 add_dependencies(
-  ${PROJECT_NAME}_display_topics
-  ${catkin_EXPORTED_TARGETS}
+        ${PROJECT_NAME}_display_topics
+        ${catkin_EXPORTED_TARGETS}
 )
 
 # Needed by Qt / RViz / ROS
-class_loader_hide_library_symbols(
-  ${PROJECT_QT_PANELS_TARGETS}
-)
+class_loader_hide_library_symbols(${PROJECT_QT_PANELS_TARGETS})
 
 #############
 ## Install ##
@@ -104,28 +103,29 @@ class_loader_hide_library_symbols(
 ## Mark executables and/or libraries for installation
 # Qt panel
 install(TARGETS
-  ${PROJECT_TARGETS}
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
+        ${PROJECT_TARGETS}
+        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+        )
 
 ## Mark cpp header files for installation
-install(
-  DIRECTORY
-  include/${PROJECT_NAME}/
-  DESTINATION
-  ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-)
+install(DIRECTORY
+        include/${PROJECT_NAME}/
+        DESTINATION
+        ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+        )
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
-install(
-  FILES
-  plugin.xml
-  DESTINATION
-  ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
+install(FILES
+        plugin.xml
+        DESTINATION
+        ${CATKIN_PACKAGE_SHARE_DESTINATION}
+        )
 
 #############
 ## Testing ##
 #############
+if (CATKIN_ENABLE_TESTING)
+    roslint_add_test()
+endif ()

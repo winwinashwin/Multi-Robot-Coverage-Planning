@@ -125,4 +125,5 @@ if (CATKIN_ENABLE_TESTING)
     catkin_add_nosetests(test/test_interpolator.py)
 
     add_rostest(test/${PROJECT_NAME}/test_${PROJECT_NAME}.test)
+    roslint_add_test()
 endif ()

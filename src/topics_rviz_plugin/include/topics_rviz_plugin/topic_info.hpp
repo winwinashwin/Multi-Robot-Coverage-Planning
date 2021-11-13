@@ -4,6 +4,7 @@
 #include <QLCDNumber>
 #include <QLabel>
 #include <QTime>
+#include <memory>
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/Duration.h>
@@ -19,6 +20,7 @@
 #include <std_msgs/UInt32.h>
 #include <std_msgs/UInt64.h>
 #include <std_msgs/UInt8.h>
+#include <string>
 
 namespace topics_rviz_plugin
 {
@@ -28,12 +30,12 @@ class TopicInfo : public QObject
     Q_OBJECT
 
 public:
-    TopicInfo(const std::string topic_name, const std::string topic_type,
-              const ros::Duration refresh_duration = ros::Duration(0));
+    TopicInfo(const std::string& topic_name, const std::string& topic_type,
+              ros::Duration refresh_duration = ros::Duration(0));
 
-    virtual ~TopicInfo();
+    ~TopicInfo() override;
 
-    void setMaximumRefreshRate(const ros::Duration d);
+    __attribute__((unused)) void setMaximumRefreshRate(ros::Duration d);
     ros::Duration maximumRefreshRate();
 
     const std::string topic_name_;
@@ -42,14 +44,14 @@ public:
     std::shared_ptr<QWidget> display_;
 
 Q_SIGNALS:
-    void adjustLCDNumberOfDigits(const long unsigned number);
+    void adjustLCDNumberOfDigits(uint32_t number);
 
 protected:
     ros::NodeHandle nh_;
     ros::Subscriber sub_;
 
 private Q_SLOTS:
-    void adjustLCDNumberOfDigitsHandler(const long unsigned number);
+    void adjustLCDNumberOfDigitsHandler(uint32_t number) const;
 
 private:
     ros::Time last_ = ros::Time::now();
@@ -75,4 +77,4 @@ private:
 
 }  // namespace topics_rviz_plugin
 
-#endif
+#endif  // TOPICS_RVIZ_PLUGIN_TOPIC_INFO_HPP

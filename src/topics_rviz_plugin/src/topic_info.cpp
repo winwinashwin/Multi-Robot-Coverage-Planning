@@ -1,9 +1,12 @@
+#include <memory>
+#include <string>
 #include <topics_rviz_plugin/topic_info.hpp>
+#include <utility>
 
 namespace topics_rviz_plugin
 {
 
-TopicInfo::TopicInfo(const std::string topic_name, const std::string topic_type, const ros::Duration refresh_duration)
+TopicInfo::TopicInfo(const std::string& topic_name, const std::string& topic_type, ros::Duration refresh_duration)
     : topic_name_(topic_name)
     , topic_type_(topic_type)
     , refresh_duration_(refresh_duration)
@@ -98,7 +101,7 @@ bool TopicInfo::refresh()
         return false;
 }
 
-void TopicInfo::adjustLCDNumberOfDigitsHandler(const long unsigned number)
+void TopicInfo::adjustLCDNumberOfDigitsHandler(uint32_t number) const
 {
     std::shared_ptr<QLCDNumber> lcd(std::dynamic_pointer_cast<QLCDNumber>(display_));
     if (!lcd)
@@ -144,7 +147,7 @@ void TopicInfo::float32Callback(const std_msgs::Float32ConstPtr& msg)
     if (!refresh())
         return;
 
-    long unsigned digits_counting(msg->data > 0 ? msg->data : -msg->data);
+    uint32_t digits_counting(msg->data > 0 ? msg->data : -msg->data);
     Q_EMIT adjustLCDNumberOfDigits(digits_counting);
     std::static_pointer_cast<QLCDNumber>(display_)->display(msg->data);
 }
@@ -154,7 +157,7 @@ void TopicInfo::float64Callback(const std_msgs::Float64ConstPtr& msg)
     if (!refresh())
         return;
 
-    long unsigned digits_counting(msg->data > 0 ? msg->data : -msg->data);
+    uint32_t digits_counting(msg->data > 0 ? msg->data : -msg->data);
     Q_EMIT adjustLCDNumberOfDigits(digits_counting);
     std::static_pointer_cast<QLCDNumber>(display_)->display(msg->data);
 }
@@ -164,7 +167,7 @@ void TopicInfo::int8Callback(const std_msgs::Int8ConstPtr& msg)
     if (!refresh())
         return;
 
-    long unsigned digits_counting(msg->data > 0 ? msg->data : -msg->data);
+    uint32_t digits_counting(msg->data > 0 ? msg->data : -msg->data);
     Q_EMIT adjustLCDNumberOfDigits(digits_counting);
     std::static_pointer_cast<QLCDNumber>(display_)->display(msg->data);
 }
@@ -174,7 +177,7 @@ void TopicInfo::int16Callback(const std_msgs::Int16ConstPtr& msg)
     if (!refresh())
         return;
 
-    long unsigned digits_counting(msg->data > 0 ? msg->data : -msg->data);
+    uint32_t digits_counting(msg->data > 0 ? msg->data : -msg->data);
     Q_EMIT adjustLCDNumberOfDigits(digits_counting);
     std::static_pointer_cast<QLCDNumber>(display_)->display(msg->data);
 }
@@ -184,7 +187,7 @@ void TopicInfo::int32Callback(const std_msgs::Int32ConstPtr& msg)
     if (!refresh())
         return;
 
-    long unsigned digits_counting(msg->data > 0 ? msg->data : -msg->data);
+    uint32_t digits_counting(msg->data > 0 ? msg->data : -msg->data);
     Q_EMIT adjustLCDNumberOfDigits(digits_counting);
     std::static_pointer_cast<QLCDNumber>(display_)->display(msg->data);
 }
@@ -194,7 +197,7 @@ void TopicInfo::int64Callback(const std_msgs::Int64ConstPtr& msg)
     if (!refresh())
         return;
 
-    long unsigned digits_counting(msg->data > 0 ? msg->data : -msg->data);
+    uint32_t digits_counting(msg->data > 0 ? msg->data : -msg->data);
     Q_EMIT adjustLCDNumberOfDigits(digits_counting);
     int32_t casted(msg->data);
     std::static_pointer_cast<QLCDNumber>(display_)->display(casted);
