@@ -38,6 +38,7 @@
     <exec_depend>map_server</exec_depend>
     <exec_depend>move_base</exec_depend>
     <exec_depend>multirobot_map_merge</exec_depend>
+    <exec_depend>message_filters</exec_depend>
     <exec_depend>rviz</exec_depend>
     <exec_depend>nav_msgs</exec_depend>
     <exec_depend>std_srvs</exec_depend>

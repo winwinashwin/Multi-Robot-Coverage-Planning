@@ -75,6 +75,7 @@ catkin_install_python(
         scripts/optimizer.py
         scripts/multi_robot_bringup.py
         scripts/map_merge.py
+        scripts/eval_progress.py
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

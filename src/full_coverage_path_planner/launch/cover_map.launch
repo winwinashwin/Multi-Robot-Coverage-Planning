@@ -26,7 +26,12 @@
         <param name="merged_map_topic" value="coverage_grid_merged"/>
     </node>
 
-    <node pkg="rviz" type="rviz" name="rviz"
-          args="-d $(find full_coverage_path_planner)/rviz/rviz.rviz"/>
+    <node pkg="full_coverage_path_planner" type="eval_progress.py" respawn="false" name="coverage_progress_evaluator"
+          clear_params="true" output="screen">
+        <param name="static_map_topic" value="map"/>
+        <param name="coverage_map_topic" value="coverage_grid_merged"/>
+    </node>
+
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find full_coverage_path_planner)/rviz/rviz.rviz"/>
 
 </launch>
