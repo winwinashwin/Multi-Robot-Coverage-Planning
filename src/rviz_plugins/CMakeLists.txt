@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-project(topics_rviz_plugin)
+project(rviz_plugins)
 add_compile_options(-Wall -Wextra)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -18,12 +18,12 @@ set(CMAKE_AUTOMOC ON)
 find_package(Qt5Widgets REQUIRED)
 
 set(PROJECT_QT_PANELS_TARGETS
-        ${PROJECT_NAME}_display_topics
+        topics_rviz_plugin_display_topics
         )
 
 set(PROJECT_TARGETS
         ${PROJECT_QT_PANELS_TARGETS}
-        ${PROJECT_NAME}_topic_info
+        topics_rviz_plugin_topic_info
         )
 
 ################################################
@@ -61,35 +61,27 @@ include_directories(
 )
 
 # TopicInfo class / library
-add_library(
-        ${PROJECT_NAME}_topic_info
-        include/${PROJECT_NAME}/topic_info.hpp
+add_library(topics_rviz_plugin_topic_info
         src/topic_info.cpp
 )
-target_link_libraries(
-        ${PROJECT_NAME}_topic_info
+target_link_libraries(topics_rviz_plugin_topic_info
         Qt5::Widgets
         ${catkin_LIBRARIES}
 )
-add_dependencies(
-        ${PROJECT_NAME}_topic_info
+add_dependencies(topics_rviz_plugin_topic_info
         ${catkin_EXPORTED_TARGETS}
 )
 
 # Qt panel - Display topics
-add_library(
-        ${PROJECT_NAME}_display_topics
-        include/${PROJECT_NAME}/display_topics.hpp
+add_library(topics_rviz_plugin_display_topics
         src/display_topics.cpp
 )
-target_link_libraries(
-        ${PROJECT_NAME}_display_topics
-        ${PROJECT_NAME}_topic_info
+target_link_libraries(topics_rviz_plugin_display_topics
+        topics_rviz_plugin_topic_info
         Qt5::Widgets
         ${catkin_LIBRARIES}
 )
-add_dependencies(
-        ${PROJECT_NAME}_display_topics
+add_dependencies(topics_rviz_plugin_display_topics
         ${catkin_EXPORTED_TARGETS}
 )
 
@@ -111,7 +103,7 @@ install(TARGETS
 
 ## Mark cpp header files for installation
 install(DIRECTORY
-        include/${PROJECT_NAME}/
+        include/topics_rviz_plugin
         DESTINATION
         ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
         )
