@@ -11,6 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
         roslint
         rqt_gui
         rviz
+        std_srvs
+        gazebo_msgs
         )
 
 ## Find Qt5
@@ -19,6 +21,7 @@ find_package(Qt5Widgets REQUIRED)
 
 set(PROJECT_QT_PANELS_TARGETS
         ${PROJECT_NAME}_display_topics
+        ${PROJECT_NAME}_gazebo_physics_gui
         )
 
 set(PROJECT_TARGETS
@@ -48,6 +51,8 @@ catkin_package(
         roslint
         rqt_gui
         rviz
+        std_srvs
+        gazebo_msgs
 )
 roslint_cpp()
 
@@ -84,6 +89,18 @@ target_link_libraries(${PROJECT_NAME}_display_topics
         ${catkin_LIBRARIES}
         )
 add_dependencies(${PROJECT_NAME}_display_topics
+        ${catkin_EXPORTED_TARGETS}
+        )
+
+add_library(${PROJECT_NAME}_gazebo_physics_gui
+        src/gazebo_physics_gui.cpp
+        include/${PROJECT_NAME}/gazebo_physics_gui.hpp
+        )
+target_link_libraries(${PROJECT_NAME}_gazebo_physics_gui
+        Qt5::Widgets
+        ${catkin_LIBRARIES}
+        )
+add_dependencies(${PROJECT_NAME}_gazebo_physics_gui
         ${catkin_EXPORTED_TARGETS}
         )
 

@@ -16,6 +16,8 @@
   <depend>qtbase5-dev</depend>
   <depend>rqt_gui</depend>
   <depend>rviz</depend>
+  <depend>std_srvs</depend>
+  <depend>gazebo_msgs</depend>
 
    <export>
     <rviz plugin="${prefix}/plugin.xml"/>

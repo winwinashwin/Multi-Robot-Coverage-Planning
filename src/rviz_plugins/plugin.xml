@@ -1,10 +1,20 @@
 <?xml version="1.0"?>
 <library path="lib/librviz_plugins_display_topics">
-  <class name="rviz_plugins/DisplayTopics"
-         type="rviz_plugins::DisplayTopics"
-         base_class_type="rviz::Panel">
+    <class name="rviz_plugins/DisplayTopics"
+           type="rviz_plugins::DisplayTopics"
+           base_class_type="rviz::Panel">
+        <description>
+            Display topic values
+        </description>
+    </class>
+</library>
+
+<library path="lib/librviz_plugins_gazebo_physics_gui">
+<class name="rviz_plugins/GazeboPhysics"
+       type="rviz_plugins::GazeboPhysicsGui"
+       base_class_type="rviz::Panel">
     <description>
-      Display topic values
+        A panel widget allowing control of Gazebo physics
     </description>
-  </class>
+</class>
 </library>
