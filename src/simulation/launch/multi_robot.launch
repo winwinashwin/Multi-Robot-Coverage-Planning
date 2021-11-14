@@ -12,6 +12,10 @@
         <arg name="verbose" value="true"/>
     </include>
 
+    <group ns="gazebo">
+        <node pkg="simulation" type="gz_realtime_factor_node" name="gz_realtime_factor_node" output="screen"/>
+    </group>
+
     <!--    Waits for number of agents and waypoints for each agent, then spawns each agent at start position of
     assigned path
     -->

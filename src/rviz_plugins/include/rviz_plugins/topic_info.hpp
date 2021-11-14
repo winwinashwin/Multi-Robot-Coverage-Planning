@@ -1,5 +1,5 @@
-#ifndef TOPICS_RVIZ_PLUGIN_TOPIC_INFO_HPP
-#define TOPICS_RVIZ_PLUGIN_TOPIC_INFO_HPP
+#ifndef RVIZ_PLUGINS_TOPIC_INFO_HPP
+#define RVIZ_PLUGINS_TOPIC_INFO_HPP
 
 #include <QLCDNumber>
 #include <QLabel>
@@ -22,7 +22,7 @@
 #include <std_msgs/UInt8.h>
 #include <string>
 
-namespace topics_rviz_plugin
+namespace rviz_plugins
 {
 
 class TopicInfo : public QObject
@@ -75,6 +75,6 @@ private:
     void uint64Callback(const std_msgs::UInt64ConstPtr& msg);
 };
 
-}  // namespace topics_rviz_plugin
+}  // namespace rviz_plugins
 
-#endif  // TOPICS_RVIZ_PLUGIN_TOPIC_INFO_HPP
+#endif  // RVIZ_PLUGINS_TOPIC_INFO_HPP

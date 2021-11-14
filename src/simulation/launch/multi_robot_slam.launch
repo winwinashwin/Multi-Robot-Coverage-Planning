@@ -11,6 +11,10 @@
         <arg name="debug" value="false"/>
     </include>
 
+    <group ns="gazebo">
+        <node pkg="simulation" type="gz_realtime_factor_node" name="gz_realtime_factor_node" output="screen"/>
+    </group>
+
     <include file="$(find simulation)/launch/spawn.launch">
         <arg name="id" value="0"/>
         <arg name="x_pos" value="-2.0"/>

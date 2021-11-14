@@ -1,12 +1,12 @@
-#ifndef TOPICS_RVIZ_PLUGIN_DISPLAY_TOPICS_HPP
-#define TOPICS_RVIZ_PLUGIN_DISPLAY_TOPICS_HPP
+#ifndef RVIZ_PLUGINS_DISPLAY_TOPICS_HPP
+#define RVIZ_PLUGINS_DISPLAY_TOPICS_HPP
 
 #ifndef Q_MOC_RUN
 #include <memory>
 #include <ros/package.h>
 #include <ros/ros.h>
 #include <rviz/panel.h>
-#include <topics_rviz_plugin/topic_info.hpp>
+#include <rviz_plugins/topic_info.hpp>
 #endif
 
 #include <QApplication>
@@ -28,7 +28,7 @@
 #include <string>
 #include <vector>
 
-namespace topics_rviz_plugin
+namespace rviz_plugins
 {
 
 class DisplayTopics : public rviz::Panel
@@ -70,6 +70,6 @@ protected:
     std::vector<std::shared_ptr<TopicInfo>> topic_infos_;
 };
 
-}  // namespace topics_rviz_plugin
+}  // namespace rviz_plugins
 
-#endif  // TOPICS_RVIZ_PLUGIN_DISPLAY_TOPICS_HPP
+#endif  // RVIZ_PLUGINS_DISPLAY_TOPICS_HPP

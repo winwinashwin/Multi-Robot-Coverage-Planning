@@ -13,10 +13,13 @@
     <author email="harshinechooli@gmail.com">Harshin N</author>
 
     <buildtool_depend>catkin</buildtool_depend>
+    <build_depend>gazebo</build_depend>
+
     <depend>roscpp</depend>
     <depend>nav_msgs</depend>
     <depend>std_srvs</depend>
-    <build_depend>gazebo</build_depend>
+    <depend>std_msgs</depend>
+    <depend>gazebo_msgs</depend>
     <test_depend>roslaunch</test_depend>
     <test_depend>roslint</test_depend>
     <exec_depend>gazebo_ros</exec_depend>
@@ -25,7 +28,6 @@
     <exec_depend>multirobot_map_merge</exec_depend>
     <exec_depend>turtlebot3_description</exec_depend>
     <exec_depend>rospy</exec_depend>
-    <exec_depend>std_msgs</exec_depend>
     <exec_depend>geometry_msgs</exec_depend>
     <export>
         <gazebo_ros gazebo_model_path="${prefix}/models"/>

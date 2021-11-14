@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<library path="lib/libtopics_rviz_plugin_display_topics">
-  <class name="topics_rviz_plugin/DisplayTopics"
-         type="topics_rviz_plugin::DisplayTopics"
+<library path="lib/librviz_plugins_display_topics">
+  <class name="rviz_plugins/DisplayTopics"
+         type="rviz_plugins::DisplayTopics"
          base_class_type="rviz::Panel">
     <description>
       Display topic values

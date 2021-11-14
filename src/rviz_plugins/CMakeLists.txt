@@ -18,12 +18,12 @@ set(CMAKE_AUTOMOC ON)
 find_package(Qt5Widgets REQUIRED)
 
 set(PROJECT_QT_PANELS_TARGETS
-        topics_rviz_plugin_display_topics
+        ${PROJECT_NAME}_display_topics
         )
 
 set(PROJECT_TARGETS
         ${PROJECT_QT_PANELS_TARGETS}
-        topics_rviz_plugin_topic_info
+        ${PROJECT_NAME}_topic_info
         )
 
 ################################################
@@ -61,29 +61,31 @@ include_directories(
 )
 
 # TopicInfo class / library
-add_library(topics_rviz_plugin_topic_info
+add_library(${PROJECT_NAME}_topic_info
         src/topic_info.cpp
-)
-target_link_libraries(topics_rviz_plugin_topic_info
+        include/${PROJECT_NAME}/topic_info.hpp
+        )
+target_link_libraries(${PROJECT_NAME}_topic_info
         Qt5::Widgets
         ${catkin_LIBRARIES}
-)
-add_dependencies(topics_rviz_plugin_topic_info
+        )
+add_dependencies(${PROJECT_NAME}_topic_info
         ${catkin_EXPORTED_TARGETS}
-)
+        )
 
 # Qt panel - Display topics
-add_library(topics_rviz_plugin_display_topics
+add_library(${PROJECT_NAME}_display_topics
         src/display_topics.cpp
-)
-target_link_libraries(topics_rviz_plugin_display_topics
-        topics_rviz_plugin_topic_info
+        include/${PROJECT_NAME}/display_topics.hpp
+        )
+target_link_libraries(${PROJECT_NAME}_display_topics
+        ${PROJECT_NAME}_topic_info
         Qt5::Widgets
         ${catkin_LIBRARIES}
-)
-add_dependencies(topics_rviz_plugin_display_topics
+        )
+add_dependencies(${PROJECT_NAME}_display_topics
         ${catkin_EXPORTED_TARGETS}
-)
+        )
 
 # Needed by Qt / RViz / ROS
 class_loader_hide_library_symbols(${PROJECT_QT_PANELS_TARGETS})
@@ -103,7 +105,7 @@ install(TARGETS
 
 ## Mark cpp header files for installation
 install(DIRECTORY
-        include/topics_rviz_plugin
+        include/rviz_plugins
         DESTINATION
         ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
         )

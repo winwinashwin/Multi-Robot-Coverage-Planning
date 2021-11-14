@@ -1,9 +1,9 @@
 #include <memory>
+#include <rviz_plugins/topic_info.hpp>
 #include <string>
-#include <topics_rviz_plugin/topic_info.hpp>
 #include <utility>
 
-namespace topics_rviz_plugin
+namespace rviz_plugins
 {
 
 TopicInfo::TopicInfo(const std::string& topic_name, const std::string& topic_type, ros::Duration refresh_duration)
@@ -259,4 +259,4 @@ void TopicInfo::uint64Callback(const std_msgs::UInt64ConstPtr& msg)
     std::static_pointer_cast<QLCDNumber>(display_)->display(casted);
 }
 
-}  // namespace topics_rviz_plugin
+}  // namespace rviz_plugins

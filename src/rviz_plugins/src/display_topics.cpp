@@ -1,12 +1,12 @@
 #include <algorithm>
 #include <map>
 #include <memory>
+#include <rviz_plugins/display_topics.hpp>
 #include <string>
-#include <topics_rviz_plugin/display_topics.hpp>
 #include <utility>
 #include <vector>
 
-namespace topics_rviz_plugin
+namespace rviz_plugins
 {
 DisplayTopics::DisplayTopics(QWidget* parent)
     : rviz::Panel(parent)
@@ -20,7 +20,7 @@ DisplayTopics::DisplayTopics(QWidget* parent)
     connect(this, &DisplayTopics::displayMessageBox, this, &DisplayTopics::displayMessageBoxHandler);
 
     layout_ = new QVBoxLayout();
-    QWidget* scroll_widget = new QWidget;
+    auto* scroll_widget = new QWidget;
     scroll_widget->setLayout(layout_);
     QScrollArea* scroll_area = new QScrollArea;
     scroll_area->setWidget(scroll_widget);
@@ -396,7 +396,7 @@ void DisplayTopics::displayMessageBoxHandler(const QString title, const QString 
     setEnabled(old_state);
 }
 
-}  // namespace topics_rviz_plugin
+}  // namespace rviz_plugins
 
 #include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(topics_rviz_plugin::DisplayTopics, rviz::Panel)
+PLUGINLIB_EXPORT_CLASS(rviz_plugins::DisplayTopics, rviz::Panel)
