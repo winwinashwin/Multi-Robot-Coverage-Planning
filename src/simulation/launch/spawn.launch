@@ -14,14 +14,13 @@
     <arg name="uid" value="$(arg frame)_$(arg id)"/>
 
     <group ns="$(arg uid)">
-        <param name="tf_prefix" value="$(arg uid)"/>
 
-        <!--    todo: Try to make `robot_description` param common for all robots -->
         <param name="robot_description"
-               command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_waffle.urdf.xacro"/>
+               command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_waffle.urdf.xacro robot_tf_prefix:=$(arg uid)"/>
 
         <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
             <param name="publish_frequency" type="double" value="50.0"/>
+            <param name="tf_prefix" value="$(arg uid)"/>
         </node>
 
         <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"

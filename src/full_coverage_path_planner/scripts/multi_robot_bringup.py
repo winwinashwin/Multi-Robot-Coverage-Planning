@@ -29,7 +29,6 @@ for robot_id in range(n_agents):
         cast(Path, rospy.wait_for_message(path_topic, Path)).poses[0].pose
     )  # type: Pose
 
-    # todo(ashwin): orient robot to path. priority: low
     cli_args = [
         pkg,
         src,

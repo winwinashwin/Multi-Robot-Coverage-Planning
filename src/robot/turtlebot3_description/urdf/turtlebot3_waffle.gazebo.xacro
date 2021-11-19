@@ -62,10 +62,10 @@
         <plugin name="turtlebot3_waffle_controller" filename="libgazebo_ros_diff_drive.so">
             <commandTopic>cmd_vel</commandTopic>
             <odometryTopic>odom</odometryTopic>
-            <odometryFrame>odom</odometryFrame>
+            <odometryFrame>$(arg robot_tf_prefix)/odom</odometryFrame>
             <odometrySource>world</odometrySource>
             <publishOdomTF>true</publishOdomTF>
-            <robotBaseFrame>base_footprint</robotBaseFrame>
+            <robotBaseFrame>$(arg robot_tf_prefix)/base_footprint</robotBaseFrame>
             <publishWheelTF>false</publishWheelTF>
             <publishTf>true</publishTf>
             <publishWheelJointState>true</publishWheelJointState>
@@ -85,7 +85,7 @@
         <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
             <alwaysOn>true</alwaysOn>
             <bodyName>imu_link</bodyName>
-            <frameName>imu_link</frameName>
+            <frameName>$(arg robot_tf_prefix)/imu_link</frameName>
             <topicName>imu</topicName>
             <serviceName>imu_service</serviceName>
             <gaussianNoise>0.0</gaussianNoise>
@@ -139,7 +139,7 @@
 <!--            <plugin name="gazebo_ros_lds_lfcd_controller" filename="libgazebo_ros_laser.so">-->
             <plugin name="gazebo_ros_lds_lfcd_controller" filename="libgazebo_ros_gpu_laser.so">
                 <topicName>scan</topicName>
-                <frameName>base_scan</frameName>
+                <frameName>$(arg robot_tf_prefix)/base_scan</frameName>
             </plugin>
         </sensor>
     </gazebo>
