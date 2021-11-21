@@ -20,7 +20,7 @@ Developed and Tested on **ROS Noetic + Ubuntu 20.04 + Gazebo 11**
 
 * Resolve dependencies using `rosdep`
 ```bash
-sudo rosdep install -i -y --from-paths ./src 
+rosdep install -i -y --from-paths ./src 
 ```
 
 * Build packages
