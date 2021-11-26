@@ -63,7 +63,7 @@ private:
         }
         catch (tf::TransformException& ex)
         {
-            ROS_ERROR("Transform lookup error");
+            ROS_WARN_STREAM_THROTTLE(2, "Transform lookup error from " << _covFrame << "to " << _mapFrame);
             return;
         }
         auto xPoint = static_cast<int>((trans.getOrigin().getX() - _grid.info.origin.position.x) / _covResolution);
