@@ -2,7 +2,7 @@
     <arg name="coverage_frame" default="base_footprint"/>
     <arg name="map_frame" default="coverage_grid"/>
 
-    <node pkg="full_coverage_path_planner" type="coverage_progress_visualizer.py" name="coverage_progress"
+    <node pkg="full_coverage_path_planner" type="coverage_progress_visualizer_node" name="coverage_progress"
           clear_params="true" output="screen">
         <rosparam command="load"
                   file="$(find full_coverage_path_planner)/config/coverage_progress_visualizer_params.yaml"/>

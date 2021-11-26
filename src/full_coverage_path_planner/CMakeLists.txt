@@ -7,6 +7,9 @@ find_package(catkin REQUIRED COMPONENTS
         costmap_2d
         nav_core
         geometry_msgs
+        nav_msgs
+        std_msgs
+        std_srvs
         pluginlib
         roscpp
         roslint
@@ -26,6 +29,9 @@ catkin_package(
         CATKIN_DEPENDS
         base_local_planner
         geometry_msgs
+        nav_msgs
+        std_msgs
+        std_srvs
         tf2
         tf
         costmap_2d
@@ -51,13 +57,17 @@ add_executable(path_planner src/main.cpp)
 target_link_libraries(path_planner ${catkin_LIBRARIES} ${PROJECT_NAME} ${OpenCV_LIBRARIES})
 add_dependencies(path_planner ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
+add_executable(coverage_progress_visualizer_node src/coverage_progress_visualizer_node.cpp)
+target_link_libraries(coverage_progress_visualizer_node ${catkin_LIBRARIES} ${PROJECT_NAME} ${OpenCV_LIBRARIES})
+add_dependencies(coverage_progress_visualizer_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
 install(TARGETS
         ${PROJECT_NAME}
         ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         )
 
-install(TARGETS path_planner
+install(TARGETS path_planner coverage_progress_visualizer_node
         RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
         )
 
@@ -71,7 +81,6 @@ install(FILES fcpp_plugin.xml
 
 catkin_install_python(
         PROGRAMS
-        scripts/coverage_progress_visualizer.py
         scripts/optimizer.py
         scripts/multi_robot_bringup.py
         scripts/map_merge.py
