@@ -13,12 +13,9 @@
     <author email="harshinechooli@gmail.com">Harshin N</author>
 
     <buildtool_depend>catkin</buildtool_depend>
-    <depend>rospy</depend>
 
     <exec_depend>robot_localization</exec_depend>
-    <exec_depend>sensor_msgs</exec_depend>
     <test_depend>roslaunch</test_depend>
-    <test_depend>roslint</test_depend>
 
     <!-- The export tag contains other, unspecified, tags -->
     <export>
