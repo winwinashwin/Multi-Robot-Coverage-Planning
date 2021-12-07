@@ -18,40 +18,61 @@ Developed and Tested on **ROS Noetic + Ubuntu 20.04 + Gazebo 11**
 
 ## Build![](./media/img/pin.svg)
 
-* Resolve dependencies using `rosdep`
+### Clone the project
+
 ```bash
-rosdep install -i -y --from-paths ./src 
+git clone https://github.com/nocoinman/MRCP.git
+cd MRCP
 ```
 
-* Build packages
+### Resolve dependencies using [`rosdep`](http://wiki.ros.org/rosdep)
+
+```bash
+rosdep install -y -i --from-paths ./src
+```
+
+### Build workspace
+
 ```bash
 catkin_make --cmake-args -DCMAKE_BUILD_TYPE=Release
+catkin_make install
 ```
 
-* Run tests (optional)
+### Run the tests to make sure everything is setup correctly (optional)
+
 ```bash
 catkin_make run_tests && catkin_test_results build/test_results
 ```
 
 ## Usage![](./media/img/pin.svg)
 
-*NOTE: Gazebo physics engine in a multi-robot simulation setting is really CPU intensive.*
-
-### Multi-Robot Coverage
+### Shell 1
 
 ```bash
-roslaunch simulation multi_robot.launch map:=map2_small
-roslaunch full_coverage_path_planner cover_map.launch map:=map2_small
+source install/setup.bash
+roslaunch simulation multi_robot.launch map:=map1_small
 ```
+> Available maps: map1, map2, map3, map4, map1_small, map2_small, map3_small, map4_small, office
 
-NOTE: **Make sure to unpause physics!**
-
-### Multi-Robot SLAM
+### Shell 2
 
 ```bash
-roslaunch simulation multi_robot_slam.launch map:=office
-roslaunch cooperative_mapping cooperative_mapping.launch
+source install/setup.bash
+roslaunch full_coverage_path_planner cover_map.launch map:=map1_small
 ```
+
+### Unpause physics to start simulation
+
+Gazebo by default starts in headless mode, with physics paused. **You'll have to unpause physics to start the simulation.**
+You can do this in 2 ways.
+
+For the shell geeks out there, you can unpause physics from the shell using `rosservice`
+
+```bash
+rosservice call /gazebo/unpause_physics
+```
+
+For the GUI fellas, we have conveniently added a custom panel to RViz to `pause` and `unpause` gazebo physics. Thanks us later!
 
 ## Workflow![](./media/img/pin.svg)
 
@@ -79,7 +100,17 @@ Agents follow the designated path asynchronously. This is accomplished using sim
 |![](./media/map3.gif) | ![](./media/map4.gif) |
 
 
-## Citation![](./media/img/pin.svg)
+## Acknowledgements![](./media/img/pin.svg)
+
+The following open-source projects were really insightful for the implementation of this project. These were improvised and adapted for our use case. Please check them out!
+
+### [topics_rviz_plugin](https://gitlab.com/InstitutMaupertuis/topics_rviz_plugin)
+### [full_coverage_path_planner](https://github.com/MapaRobo/full_coverage_path_planner)
+### [tracking_pid](https://github.com/nobleo/tracking_pid)
+
+---
+
+The following research papers and articles were referred during ideation and development.
 
 ```bibtex
 @article{DBLP:journals/corr/abs-1806-03581,
