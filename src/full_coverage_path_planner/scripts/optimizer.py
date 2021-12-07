@@ -37,7 +37,8 @@ class BaseOptimizer(object):
             np.sqrt(cls.TIME_GAIN * navigable_area / cls.CARDINALITY_GAIN)
         )
         # Minimum 2 agents are required
-        n_agents = np.clip(n_agents, a_min=2, a_max=np.inf).astype(dtype=np.uint8)
+        # todo(gautham): Improve algorithm
+        n_agents = np.clip(n_agents, a_min=2, a_max=5).astype(dtype=np.uint8)
 
         rospy.loginfo(f"Solved. N_AGENTS: {n_agents}")
         return n_agents
