@@ -14,8 +14,7 @@
 
     <!--    Waits for number of agents and waypoints for each agent, then launches the entire stack for each agent-->
     <node pkg="full_coverage_path_planner" type="multi_robot_bringup.py" name="multi_robot_bringup" clear_params="true"
-          required="true"
-          output="screen">
+          required="true" output="screen">
         <param name="robot_namespace" value="robot"/>
     </node>
 
