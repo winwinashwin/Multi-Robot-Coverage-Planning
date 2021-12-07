@@ -1,9 +1,0 @@
-.git
-.gitignore
-.github
-.idea
-
-build
-devel
-media
-src/cmake-build-*

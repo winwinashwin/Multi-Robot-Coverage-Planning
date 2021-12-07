@@ -41,7 +41,7 @@ add_executable(gz_realtime_factor_node src/gz_realtime_factor_node.cpp)
 target_link_libraries(gz_realtime_factor_node ${catkin_LIBRARIES})
 add_dependencies(gazebo_2Dmap_plugin ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-install(DIRECTORY launch models worlds
+install(DIRECTORY launch worlds
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
         )
 
