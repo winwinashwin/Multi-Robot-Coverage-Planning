@@ -20,16 +20,6 @@
         <!--    Not required if Gazebo is publishing the odom<->base_link tf -->
         <!--        <include file="$(find filters)/launch/ekf.launch"/>-->
 
-        <!--    Even after specifying the `tf_prefix` param, frame_id in IMU messages still seem to be `base_footprint`.
-                Hence the frame id is manually set to `tf_prefix`/base_footprint using a simple python script.
-                This corrected IMU messages are the ones that are passed to the EKF node for state estimation.
-        -->
-        <node pkg="filters" type="imu_frame_id_correction.py" name="imu_frame_id_correction" output="screen"
-              clear_params="true">
-            <remap from="imu_in" to="imu"/>
-            <remap from="imu_out" to="imu/frame_id_corrected"/>
-        </node>
-
         <!--    SLAM -->
         <group>
             <include file="$(find slam)/launch/gmapping.launch">
