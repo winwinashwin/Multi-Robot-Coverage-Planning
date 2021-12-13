@@ -31,7 +31,13 @@ class CoverageProgressEvaluatorNode:
     def map_callback(self, coverage_map: OccupancyGrid):
         static_grid = np.array(self._static_map.data)
         coverage_grid = np.array(coverage_map.data)
-        assert static_grid.shape == coverage_grid.shape
+        try:
+            assert static_grid.shape == coverage_grid.shape
+        except AssertionError:
+            rospy.logwarn(
+                f"Grid shape mismatch! Static grid ({static_grid.shape}) & Coverage grid ({coverage_grid.shape})"
+            )
+            return
 
         counts = dict(
             zip(*np.unique(coverage_grid[static_grid != -1], return_counts=True))

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-    <name>robot</name>
+    <name>agent</name>
     <version>0.0.0</version>
-    <description>The robot package</description>
+    <description>The agent metapackage</description>
 
     <maintainer email="ashwin5059198@gmail.com">Ashwin A Nayar</maintainer>
 

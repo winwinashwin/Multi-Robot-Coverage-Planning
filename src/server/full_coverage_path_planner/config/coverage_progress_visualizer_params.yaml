@@ -2,15 +2,15 @@
 #coverage_frame: robot_0/base_footprint
 
 # Rate at which progress tracker should be run
-rate: 5.0  # 5 Hz
+rate: 20.0  # Hz
 
 grid:
-  width: 10.0
-  height: 10.0
+  width: 50.0
+  height: 50.0
   resolution: 0.05
   origin:
-    x: -5.0
-    y: -5.0
+    x: -25.0
+    y: -25.0
 
 coverage:
   # NOTE: To compensate for discretization, radius will be incremented further by 2*resolution
