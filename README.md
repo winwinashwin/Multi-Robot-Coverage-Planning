@@ -2,7 +2,7 @@
 
 > Software stack for Cooperative Multi-Robot Coverage for Cleaning Robots.
 
-**Developed for : AIITRA Robotics Challenge 2021**
+**Developed for : AIITRA Robotics Challenge 2021 (Winner!)**
 
 [![ros-ci](https://github.com/nocoinman/MRCP/actions/workflows/ros-ci.yaml/badge.svg)](https://github.com/nocoinman/MRCP/actions/workflows/ros-ci.yaml)
 [![lint](https://github.com/nocoinman/MRCP/actions/workflows/lint.yaml/badge.svg)](https://github.com/nocoinman/MRCP/actions/workflows/lint.yaml)
