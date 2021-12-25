@@ -21,7 +21,7 @@ Developed and Tested on **ROS Noetic + Ubuntu 20.04 + Gazebo 11**
 ### Clone the project
 
 ```bash
-git clone https://github.com/nocoinman/MRCP.git
+git clone https://github.com/nocoinman/Multi-Robot-Coverage-Planning.git
 cd MRCP
 ```
 
@@ -35,7 +35,6 @@ rosdep install -y -i --from-paths ./src
 
 ```bash
 catkin_make --cmake-args -DCMAKE_BUILD_TYPE=Release
-catkin_make install
 ```
 
 ### Run the tests to make sure everything is setup correctly (optional)
@@ -49,16 +48,16 @@ catkin_make run_tests && catkin_test_results build/test_results
 ### Shell 1
 
 ```bash
-source install/setup.bash
-roslaunch simulation multi_robot.launch map:=map1_small
+source devel/setup.bash
+roslaunch simulation multi_robot.launch map:=map1
 ```
-> Available maps: map1, map2, map3, map4, map1_small, map2_small, map3_small, map4_small, office
+> Available maps: map1, map2, map3, map4
 
 ### Shell 2
 
 ```bash
-source install/setup.bash
-roslaunch full_coverage_path_planner cover_map.launch map:=map1_small
+source devel/setup.bash
+roslaunch full_coverage_path_planner cover_map.launch map:=map1
 ```
 
 ### Unpause physics to start simulation
