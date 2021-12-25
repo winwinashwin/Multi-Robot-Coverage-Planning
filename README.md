@@ -99,6 +99,7 @@ Agents follow the designated path asynchronously. This is accomplished using sim
 |:--------------------:|:---------------------:|
 |![](./media/map3.gif) | ![](./media/map4.gif) |
 
+![](./media/img/efficiency.png)
 
 ## Acknowledgements![](./media/img/pin.svg)
 
