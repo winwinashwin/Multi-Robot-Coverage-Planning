@@ -2,7 +2,7 @@
 
 > Software stack for Cooperative Multi-Robot Coverage for Cleaning Robots.
 
-**Developed for : AIITRA Robotics Challenge 2021 (Winner!)**
+**Developed for : AIITRA Robotics Challenge 2021 - Team Curious Comrades (Winner!)**
 
 [![ros-ci](https://github.com/nocoinman/MRCP/actions/workflows/ros-ci.yaml/badge.svg)](https://github.com/nocoinman/MRCP/actions/workflows/ros-ci.yaml)
 [![lint](https://github.com/nocoinman/MRCP/actions/workflows/lint.yaml/badge.svg)](https://github.com/nocoinman/MRCP/actions/workflows/lint.yaml)
@@ -71,7 +71,7 @@ For the shell geeks out there, you can unpause physics from the shell using `ros
 rosservice call /gazebo/unpause_physics
 ```
 
-For the GUI fellas, we have conveniently added a custom panel to RViz to `pause` and `unpause` gazebo physics. Thanks us later!
+For the GUI fellas, we have conveniently added a custom panel to RViz to `pause` and `unpause` gazebo physics. Thank us later!
 
 ## Workflow![](./media/img/pin.svg)
 
